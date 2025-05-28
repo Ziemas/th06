@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cmath>
-#include <d3dx8math.h>
+#include "d3dx/D3DX.hpp"
 
 #include "AnmManager.hpp"
 #include "AnmVm.hpp"
@@ -84,11 +84,11 @@ ZUN_ASSERT_SIZE(PlayerRect, 0x10);
 struct PlayerBullet
 {
     AnmVm sprite;
-    D3DXVECTOR3 position;
-    D3DXVECTOR3 size;
-    D3DXVECTOR2 velocity;
+    zD3DXVECTOR3 position;
+    zD3DXVECTOR3 size;
+    zD3DXVECTOR2 velocity;
     f32 sidewaysMotion;
-    D3DXVECTOR3 unk_134;
+    zD3DXVECTOR3 unk_134;
     ZunTimer unk_140;
     i16 damage;
     i16 bulletState;
@@ -119,8 +119,8 @@ struct PlayerBombInfo
     void (*draw)(Player *p);
     i32 reimuABombProjectilesState[8];
     f32 reimuABombProjectilesRelated[8];
-    D3DXVECTOR3 bombRegionPositions[8];
-    D3DXVECTOR3 bombRegionVelocities[8];
+    zD3DXVECTOR3 bombRegionPositions[8];
+    zD3DXVECTOR3 bombRegionVelocities[8];
     AnmVm sprites[8][4];
 };
 ZUN_ASSERT_SIZE(PlayerBombInfo, 0x231c);
@@ -194,30 +194,30 @@ struct Player
     static void DrawBullets(Player *p);
     static void DrawBulletExplosions(Player *p);
 
-    f32 AngleFromPlayer(D3DXVECTOR3 *pos);
-    f32 AngleToPlayer(D3DXVECTOR3 *pos);
-    i32 CheckGraze(D3DXVECTOR3 *center, D3DXVECTOR3 *size);
-    i32 CalcKillBoxCollision(D3DXVECTOR3 *bulletCenter, D3DXVECTOR3 *bulletSize);
-    i32 CalcLaserHitbox(D3DXVECTOR3 *laserCenter, D3DXVECTOR3 *laserSize, D3DXVECTOR3 *rotation, f32 angle,
+    f32 AngleFromPlayer(zD3DXVECTOR3 *pos);
+    f32 AngleToPlayer(zD3DXVECTOR3 *pos);
+    i32 CheckGraze(zD3DXVECTOR3 *center, zD3DXVECTOR3 *size);
+    i32 CalcKillBoxCollision(zD3DXVECTOR3 *bulletCenter, zD3DXVECTOR3 *bulletSize);
+    i32 CalcLaserHitbox(zD3DXVECTOR3 *laserCenter, zD3DXVECTOR3 *laserSize, zD3DXVECTOR3 *rotation, f32 angle,
                         i32 canGraze);
-    i32 CalcDamageToEnemy(D3DXVECTOR3 *enemyPos, D3DXVECTOR3 *enemySize, i32 *unk);
-    i32 CalcItemBoxCollision(D3DXVECTOR3 *center, D3DXVECTOR3 *size);
-    void ScoreGraze(D3DXVECTOR3 *center);
+    i32 CalcDamageToEnemy(zD3DXVECTOR3 *enemyPos, zD3DXVECTOR3 *enemySize, i32 *unk);
+    i32 CalcItemBoxCollision(zD3DXVECTOR3 *center, zD3DXVECTOR3 *size);
+    void ScoreGraze(zD3DXVECTOR3 *center);
     void Die();
 
     AnmVm playerSprite;
     AnmVm orbsSprite[3];
-    D3DXVECTOR3 positionCenter;
-    D3DXVECTOR3 unk_44c;
-    D3DXVECTOR3 hitboxTopLeft;
-    D3DXVECTOR3 hitboxBottomRight;
-    D3DXVECTOR3 grabItemTopLeft;
-    D3DXVECTOR3 grabItemBottomRight;
-    D3DXVECTOR3 hitboxSize;
-    D3DXVECTOR3 grabItemSize;
-    D3DXVECTOR3 orbsPosition[2];
-    D3DXVECTOR3 bombRegionPositions[32];
-    D3DXVECTOR3 bombRegionSizes[32];
+    zD3DXVECTOR3 positionCenter;
+    zD3DXVECTOR3 unk_44c;
+    zD3DXVECTOR3 hitboxTopLeft;
+    zD3DXVECTOR3 hitboxBottomRight;
+    zD3DXVECTOR3 grabItemTopLeft;
+    zD3DXVECTOR3 grabItemBottomRight;
+    zD3DXVECTOR3 hitboxSize;
+    zD3DXVECTOR3 grabItemSize;
+    zD3DXVECTOR3 orbsPosition[2];
+    zD3DXVECTOR3 bombRegionPositions[32];
+    zD3DXVECTOR3 bombRegionSizes[32];
     i32 bombRegionDamages[32];
     i32 unk_838[32];
     PlayerRect bombProjectiles[16];
@@ -237,7 +237,7 @@ struct Player
     f32 previousHorizontalSpeed;
     f32 previousVerticalSpeed;
     i16 previousFrameInput;
-    D3DXVECTOR3 positionOfLastEnemyHit;
+    zD3DXVECTOR3 positionOfLastEnemyHit;
     PlayerBullet bullets[80];
     ZunTimer fireBulletTimer;
     ZunTimer invulnerabilityTimer;

@@ -1,7 +1,8 @@
 #pragma once
 
 #include <d3d8.h>
-#include <d3dx8math.h>
+#include <d3dx8tex.h>
+#include "d3dx/D3DX.hpp"
 
 #include "AnmIdx.hpp"
 #include "AnmVm.hpp"
@@ -16,38 +17,38 @@ namespace th06
 // structure of a vertex with SetVertexShade FVF set to D3DFVF_DIFFUSE | D3DFVF_XYZRHW
 struct VertexDiffuseXyzrwh
 {
-    D3DXVECTOR4 position;
+    zD3DXVECTOR4 position;
     D3DCOLOR diffuse;
 };
 
 // Structure of a vertex with SetVertexShade FVF set to D3DFVF_TEX1 | D3DFVF_XYZRHW
 struct VertexTex1Xyzrwh
 {
-    D3DXVECTOR4 position;
-    D3DXVECTOR2 textureUV;
+    zD3DXVECTOR4 position;
+    zD3DXVECTOR2 textureUV;
 };
 
 // Structure of a vertex with SetVertexShade FVF set to D3DFVF_TEX1 | D3DFVF_DIFFUSE | D3DFVF_XYZRHW
 struct VertexTex1DiffuseXyzrwh
 {
-    D3DXVECTOR4 position;
+    zD3DXVECTOR4 position;
     D3DCOLOR diffuse;
-    D3DXVECTOR2 textureUV;
+    zD3DXVECTOR2 textureUV;
 };
 
 // Structure of a vertex with SetVertexShade FVF set to D3DFVF_TEX1 | D3DFVF_DIFFUSE | D3DFVF_XYZ
 struct VertexTex1DiffuseXyz
 {
-    D3DXVECTOR3 position;
+    zD3DXVECTOR3 position;
     D3DCOLOR diffuse;
-    D3DXVECTOR2 textureUV;
+    zD3DXVECTOR2 textureUV;
 };
 
 struct AnmRawSprite
 {
     u32 id;
-    D3DXVECTOR2 offset;
-    D3DXVECTOR2 size;
+    zD3DXVECTOR2 offset;
+    zD3DXVECTOR2 size;
 };
 
 struct AnmRawScript
@@ -81,8 +82,8 @@ ZUN_ASSERT_SIZE(AnmRawEntry, 0xb8);
 
 struct RenderVertexInfo
 {
-    D3DXVECTOR3 position;
-    D3DXVECTOR2 textureUV;
+    zD3DXVECTOR3 position;
+    zD3DXVECTOR2 textureUV;
 };
 ZUN_ASSERT_SIZE(RenderVertexInfo, 0x14);
 
@@ -95,8 +96,8 @@ struct AnmManager
     void SetupVertexBuffer();
 
     ZunResult CreateEmptyTexture(i32 textureIdx, u32 width, u32 height, i32 textureFormat);
-    ZunResult LoadTexture(i32 textureIdx, char *textureName, i32 textureFormat, D3DCOLOR colorKey);
-    ZunResult LoadTextureAlphaChannel(i32 textureIdx, char *textureName, i32 textureFormat, D3DCOLOR colorKey);
+    ZunResult LoadTexture(i32 textureIdx, char *textureName, i32 textureFormat, ZunColor colorKey);
+    ZunResult LoadTextureAlphaChannel(i32 textureIdx, char *textureName, i32 textureFormat, ZunColor colorKey);
     void ReleaseTexture(i32 textureIdx);
     void TakeScreenshotIfRequested();
     void TakeScreenshot(i32 textureId, i32 left, i32 top, i32 width, i32 height);
@@ -169,8 +170,8 @@ struct AnmManager
     void AnmManager::ExecuteAnmIdx(AnmVm *vm, i32 anmFileIdx)
     {
         vm->anmFileIndex = anmFileIdx;
-        vm->pos = D3DXVECTOR3(0, 0, 0);
-        vm->posOffset = D3DXVECTOR3(0, 0, 0);
+        vm->pos = zD3DXVECTOR3(0, 0, 0);
+        vm->posOffset = zD3DXVECTOR3(0, 0, 0);
         vm->fontHeight = 15;
         vm->fontWidth = 15;
 
@@ -200,7 +201,7 @@ struct AnmManager
     IDirect3DSurface8 *surfaces[32];
     IDirect3DSurface8 *surfacesBis[32];
     D3DXIMAGE_INFO surfaceSourceInfo[32];
-    D3DCOLOR currentTextureFactor;
+    ZunColor currentTextureFactor;
     IDirect3DTexture8 *currentTexture;
     u8 currentBlendMode;
     u8 currentColorOp;

@@ -8,8 +8,9 @@
 // ----------------------------------------------------------------------------
 #pragma once
 
+#include "ZunColor.hpp"
 #include <d3d8.h>
-#include <d3dx8.h>
+#include <d3dx8core.h>
 
 namespace th06
 {
@@ -32,7 +33,7 @@ class CMyFont
         m_lpFont = NULL;
     };
     virtual void Init(LPDIRECT3DDEVICE8 lpD3DDEV, int w, int h);
-    virtual void Print(char *str, int x, int y, D3DCOLOR color = 0xffffffff);
+    virtual void Print(char *str, int x, int y, ZunColor color = COLOR_WHITE);
     virtual void Clean();
 };
 

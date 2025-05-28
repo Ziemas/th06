@@ -9,7 +9,7 @@
 #include "diffbuild.hpp"
 #include "inttypes.hpp"
 #include <Windows.h>
-#include <d3dx8math.h>
+#include "d3dx/D3DX.hpp"
 
 namespace th06
 {
@@ -56,9 +56,9 @@ struct EclTimelineInstrArgs
     u16 ushortVar2;
     u32 uintVar4;
 
-    D3DXVECTOR3 *Var1AsVec()
+    zD3DXVECTOR3 *Var1AsVec()
     {
-        return (D3DXVECTOR3 *)&this->uintVar1;
+        return (zD3DXVECTOR3 *)&this->uintVar1;
     }
 };
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <d3d8.h>
-#include <d3dx8math.h>
+#include "d3dx/D3DX.hpp"
 
 #include "ZunColor.hpp"
 #include "ZunMath.hpp"
@@ -146,8 +146,8 @@ struct AnmVm
         this->scaleY = 1.0;
         this->scaleInterpEndTime = 0;
         this->alphaInterpEndTime = 0;
-        this->color = D3DCOLOR_RGBA(0xff, 0xff, 0xff, 0xff);
-        D3DXMatrixIdentity(&this->matrix);
+        this->color = COLOR_WHITE;
+        zD3DXMatrixIdentity(&this->matrix);
         this->flags.flags = AnmVmFlags_0 | AnmVmFlags_1;
         this->autoRotate = 0;
         this->pendingInterrupt = 0;
@@ -165,15 +165,15 @@ struct AnmVm
         this->flags.isVisible = 0;
     }
 
-    D3DXVECTOR3 rotation;
-    D3DXVECTOR3 angleVel;
+    zD3DXVECTOR3 rotation;
+    zD3DXVECTOR3 angleVel;
     f32 scaleY;
     f32 scaleX;
     f32 scaleInterpFinalY;
     f32 scaleInterpFinalX;
-    D3DXVECTOR2 uvScrollPos;
+    zD3DXVECTOR2 uvScrollPos;
     ZunTimer currentTimeInScript;
-    D3DXMATRIX matrix;
+    zD3DXMATRIX matrix;
     ZunColor color;
     AnmVmFlags flags;
 
@@ -183,7 +183,7 @@ struct AnmVm
     i16 pendingInterrupt;
     i16 posInterpEndTime;
     // Two padding bytes
-    D3DXVECTOR3 pos;
+    zD3DXVECTOR3 pos;
     f32 scaleInterpInitialY;
     f32 scaleInterpInitialX;
     ZunTimer scaleInterpTime;
@@ -194,11 +194,11 @@ struct AnmVm
     AnmRawInstr *beginingOfScript;
     AnmRawInstr *currentInstruction;
     AnmLoadedSprite *sprite;
-    D3DCOLOR alphaInterpInitial;
-    D3DCOLOR alphaInterpFinal;
-    D3DXVECTOR3 posInterpInitial;
-    D3DXVECTOR3 posInterpFinal;
-    D3DXVECTOR3 posOffset;
+    ZunColor alphaInterpInitial;
+    ZunColor alphaInterpFinal;
+    zD3DXVECTOR3 posInterpInitial;
+    zD3DXVECTOR3 posInterpFinal;
+    zD3DXVECTOR3 posOffset;
     ZunTimer posInterpTime;
     i32 timeOfLastSpriteSet;
     ZunTimer alphaInterpTime;

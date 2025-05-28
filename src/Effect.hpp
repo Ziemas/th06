@@ -18,12 +18,12 @@ typedef i32 (*EffectUpdateCallback)(Effect *);
 struct Effect
 {
     AnmVm vm;
-    D3DXVECTOR3 pos1;
-    D3DXVECTOR3 unk_11c;
-    D3DXVECTOR3 unk_128;
-    D3DXVECTOR3 position;
-    D3DXVECTOR3 pos2;
-    D3DXQUATERNION quaternion;
+    zD3DXVECTOR3 pos1;
+    zD3DXVECTOR3 unk_11c;
+    zD3DXVECTOR3 unk_128;
+    zD3DXVECTOR3 position;
+    zD3DXVECTOR3 pos2;
+    zD3DXQUATERNION quaternion;
     f32 unk_15c;
     f32 angleRelated;
     ZunTimer timer;

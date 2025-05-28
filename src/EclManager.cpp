@@ -95,7 +95,7 @@ ZunResult EclManager::RunEcl(Enemy *enemy)
     EnemyLaserShooter *local_60;
     EclRawInstrLaserArgs *local_64;
     EclRawInstrSpellcardEffectArgs *local_6c;
-    D3DXVECTOR3 local_98;
+    zD3DXVECTOR3 local_98;
     EclRawInstrEnemyCreateArgs local_b0;
     Enemy *local_b4;
 
@@ -964,7 +964,7 @@ ZunResult EclManager::RunEcl(Enemy *enemy)
                 {
                     enemy->flags.unk1 = 0;
                     enemy->position = enemy->moveInterpStartPos + enemy->moveInterp;
-                    enemy->axisSpeed = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+                    enemy->axisSpeed = zD3DXVECTOR3(0.0f, 0.0f, 0.0f);
                 }
                 break;
             }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <d3dx8math.h>
+#include "d3dx/D3DX.hpp"
 
 #include "AnmManager.hpp"
 #include "Chain.hpp"
@@ -16,9 +16,9 @@ namespace th06
 struct AsciiManagerString
 {
     char text[64];
-    D3DXVECTOR3 position;
-    D3DCOLOR color;
-    D3DXVECTOR2 scale;
+    zD3DXVECTOR3 position;
+    ZunColor color;
+    zD3DXVECTOR2 scale;
     // If true, we are drawing the currently selected element of the MainMenu
     // class.
     u32 isSelected;
@@ -30,8 +30,8 @@ ZUN_ASSERT_SIZE(AsciiManagerString, 0x60);
 struct AsciiManagerPopup
 {
     char digits[8];
-    D3DXVECTOR3 position;
-    D3DCOLOR color;
+    zD3DXVECTOR3 position;
+    ZunColor color;
     ZunTimer timer;
     u8 inUse;
     u8 characterCount;
@@ -74,10 +74,10 @@ struct AsciiManager
     void DrawPopupsWithHwVertexProcessing();
     void DrawPopupsWithoutHwVertexProcessing();
 
-    void AddString(D3DXVECTOR3 *position, char *text);
-    void AddFormatText(D3DXVECTOR3 *position, const char *fmt, ...);
-    void CreatePopup1(D3DXVECTOR3 *position, i32 value, D3DCOLOR color);
-    void CreatePopup2(D3DXVECTOR3 *position, i32 value, D3DCOLOR color);
+    void AddString(zD3DXVECTOR3 *position, char *text);
+    void AddFormatText(zD3DXVECTOR3 *position, const char *fmt, ...);
+    void CreatePopup1(zD3DXVECTOR3 *position, i32 value, ZunColor color);
+    void CreatePopup2(zD3DXVECTOR3 *position, i32 value, ZunColor color);
 
     void SetColor(ZunColor color)
     {
@@ -88,8 +88,8 @@ struct AsciiManager
     AnmVm vm1;
     AsciiManagerString strings[256];
     i32 numStrings;
-    D3DCOLOR color;
-    D3DXVECTOR2 scale;
+    ZunColor color;
+    zD3DXVECTOR2 scale;
     // If true, we are drawing an element of the Gui class.
     u32 isGui;
     // If true, we are drawing the currently selected element of the MainMenu

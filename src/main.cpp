@@ -2,7 +2,7 @@
 
 #include <windows.h>
 
-#include <D3DX8.h>
+#include <d3dx8core.h>
 #include <stdio.h>
 
 #include "AnmManager.hpp"

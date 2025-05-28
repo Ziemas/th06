@@ -8,7 +8,7 @@
 namespace th06
 {
 
-void ScreenEffect::Clear(D3DCOLOR color)
+void ScreenEffect::Clear(ZunColor color)
 {
     g_Supervisor.d3dDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, color, 1.0, 0);
     if (g_Supervisor.d3dDevice->Present(NULL, NULL, NULL, NULL) < 0)
@@ -24,7 +24,7 @@ void ScreenEffect::Clear(D3DCOLOR color)
 }
 
 // Why is this not in GameWindow.cpp? Don't ask me...
-void ScreenEffect::SetViewport(D3DCOLOR color)
+void ScreenEffect::SetViewport(ZunColor color)
 {
     g_Supervisor.viewport.X = 0;
     g_Supervisor.viewport.Y = 0;
@@ -56,16 +56,16 @@ ChainCallbackResult ScreenEffect::CalcFadeIn(ScreenEffect *effect)
     return CHAIN_CALLBACK_RESULT_CONTINUE;
 }
 
-void ScreenEffect::DrawSquare(ZunRect *rect, D3DCOLOR rectColor)
+void ScreenEffect::DrawSquare(ZunRect *rect, ZunColor rectColor)
 {
     VertexDiffuseXyzrwh vertices[4];
 
     // In the original code, VertexDiffuseXyzrwh almost certainly is a vec3 with a trailing w, which would make these
     // simple vec3 assigns
-    memcpy(&vertices[0].position, &D3DXVECTOR3(rect->left, rect->top, 0.0f), sizeof(D3DXVECTOR3));
-    memcpy(&vertices[1].position, &D3DXVECTOR3(rect->right, rect->top, 0.0f), sizeof(D3DXVECTOR3));
-    memcpy(&vertices[2].position, &D3DXVECTOR3(rect->left, rect->bottom, 0.0f), sizeof(D3DXVECTOR3));
-    memcpy(&vertices[3].position, &D3DXVECTOR3(rect->right, rect->bottom, 0.0f), sizeof(D3DXVECTOR3));
+    memcpy(&vertices[0].position, &zD3DXVECTOR3(rect->left, rect->top, 0.0f), sizeof(zD3DXVECTOR3));
+    memcpy(&vertices[1].position, &zD3DXVECTOR3(rect->right, rect->top, 0.0f), sizeof(zD3DXVECTOR3));
+    memcpy(&vertices[2].position, &zD3DXVECTOR3(rect->left, rect->bottom, 0.0f), sizeof(zD3DXVECTOR3));
+    memcpy(&vertices[3].position, &zD3DXVECTOR3(rect->right, rect->bottom, 0.0f), sizeof(zD3DXVECTOR3));
     vertices[0].position.w = vertices[1].position.w = vertices[2].position.w = vertices[3].position.w = 1.00f;
     vertices[0].diffuse = vertices[1].diffuse = vertices[2].diffuse = vertices[3].diffuse = rectColor;
 

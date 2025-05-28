@@ -1238,7 +1238,7 @@ u32 ResultScreen::DrawFinalStats()
 {
     f32 completion;
     f32 unknownFloat;
-    D3DXVECTOR3 strPos;
+    zD3DXVECTOR3 strPos;
     AnmVm *viewport;
     i32 color;
     f32 slowdownRate;
@@ -1459,7 +1459,7 @@ ChainCallbackResult ResultScreen::OnUpdate(ResultScreen *resultScreen)
                         vm->color = COLOR_WHITE;
                     }
 
-                    vm->posOffset = D3DXVECTOR3(-4.0f, -4.0f, 0.0f);
+                    vm->posOffset = zD3DXVECTOR3(-4.0f, -4.0f, 0.0f);
                 }
                 else
                 {
@@ -1471,7 +1471,7 @@ ChainCallbackResult ResultScreen::OnUpdate(ResultScreen *resultScreen)
                     {
                         vm->color = COLOR_SET_ALPHA(COLOR_WHITE, 176);
                     }
-                    vm->posOffset = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+                    vm->posOffset = zD3DXVECTOR3(0.0f, 0.0f, 0.0f);
                 }
             }
         }
@@ -1501,7 +1501,7 @@ ChainCallbackResult ResultScreen::OnUpdate(ResultScreen *resultScreen)
                 {
                     vm->color = COLOR_WHITE;
                 }
-                vm->posOffset = D3DXVECTOR3(-4.0f, -4.0f, 0.0f);
+                vm->posOffset = zD3DXVECTOR3(-4.0f, -4.0f, 0.0f);
             }
             else
             {
@@ -1513,7 +1513,7 @@ ChainCallbackResult ResultScreen::OnUpdate(ResultScreen *resultScreen)
                 {
                     vm->color = COLOR_SET_ALPHA(COLOR_WHITE, 176);
                 }
-                vm->posOffset = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+                vm->posOffset = zD3DXVECTOR3(0.0f, 0.0f, 0.0f);
             }
         }
 
@@ -1785,7 +1785,7 @@ ChainCallbackResult th06::ResultScreen::OnDraw(ResultScreen *resultScreen)
 
     char name[9];
 
-    D3DXVECTOR3 strPos;
+    zD3DXVECTOR3 strPos;
 
     sprite = &resultScreen->unk_40[0];
     g_Supervisor.viewport.X = 0;
@@ -1968,7 +1968,7 @@ ChainCallbackResult th06::ResultScreen::OnDraw(ResultScreen *resultScreen)
     if (resultScreen->resultScreenState == RESULT_SCREEN_STATE_WRITING_HIGHSCORE_NAME ||
         resultScreen->resultScreenState == RESULT_SCREEN_STATE_WRITING_REPLAY_NAME)
     {
-        *spritePos.AsD3dXVec() = D3DXVECTOR3(160.0f, 356.0f, 0.0f);
+        *spritePos.AsD3dXVec() = zD3DXVECTOR3(160.0f, 356.0f, 0.0f);
 
         for (row = 0; row < RESULT_KEYBOARD_ROWS; row++)
         {
@@ -2130,8 +2130,8 @@ ZunResult ResultScreen::AddedCallback(ResultScreen *resultScreen)
         for (i = 0; i < ARRAY_SIZE_SIGNED(resultScreen->unk_40); i++, sprite++)
         {
 
-            sprite->pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-            sprite->posOffset = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+            sprite->pos = zD3DXVECTOR3(0.0f, 0.0f, 0.0f);
+            sprite->posOffset = zD3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
             // Execute all the scripts from the start of result00 to the end of result02
             g_AnmManager->SetAndExecuteScriptIdx(sprite, ANM_SCRIPT_RESULT00_START + i);
@@ -2142,7 +2142,7 @@ ZunResult ResultScreen::AddedCallback(ResultScreen *resultScreen)
         {
             g_AnmManager->InitializeAndSetSprite(sprite, ANM_SCRIPT_TEXT_RESULTSCREEN_CHARACTER_NAME + i);
 
-            sprite->pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+            sprite->pos = zD3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
             sprite->flags.anchor = AnmVmAnchor_TopLeft;
 

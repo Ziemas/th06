@@ -77,8 +77,8 @@ struct GuiMsgVm
     AnmVm portraits[2];
     AnmVm dialogueLines[2];
     AnmVm introLines[2];
-    D3DCOLOR textColorsA[4];
-    D3DCOLOR textColorsB[4];
+    ZunColor textColorsA[4];
+    ZunColor textColorsB[4];
     u32 fontSize;
     u32 ignoreWaitCounter;
     u8 dialogueSkippable;
@@ -87,7 +87,7 @@ ZUN_ASSERT_SIZE(GuiMsgVm, 0x6a8);
 
 struct GuiFormattedText
 {
-    D3DXVECTOR3 pos;
+    zD3DXVECTOR3 pos;
     i32 fmtArg;
     i32 isShown;
     ZunTimer timer;

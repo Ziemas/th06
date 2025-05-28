@@ -173,7 +173,7 @@ ChainCallbackResult MusicRoom::OnUpdate(MusicRoom *musicRoom)
 ChainCallbackResult MusicRoom::OnDraw(MusicRoom *musicRoom)
 {
     i32 i;
-    D3DXVECTOR3 textPos;
+    zD3DXVECTOR3 textPos;
     char rightArrowStr[4];
 
     rightArrowStr[0] = TEXT_RIGHT_ARROW;

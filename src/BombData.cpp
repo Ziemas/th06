@@ -22,7 +22,7 @@ void BombData::BombReimuACalc(Player *player)
     i32 i;
     f32 vecLength;
     i32 bombIdx;
-    D3DXVECTOR3 bombPivot;
+    zD3DXVECTOR3 bombPivot;
     AnmVm *bombSprite;
     ZunVec2 angle;
 

@@ -34,8 +34,8 @@ DIFFABLE_STATIC(i32, g_PlayerShot);
 DIFFABLE_STATIC(f32, g_PlayerDistance);
 DIFFABLE_STATIC(f32, g_PlayerAngle);
 DIFFABLE_STATIC_ARRAY(f32, 6, g_StarAngleTable);
-DIFFABLE_STATIC(D3DXVECTOR3, g_EnemyPosVector);
-DIFFABLE_STATIC(D3DXVECTOR3, g_PlayerPosVector);
+DIFFABLE_STATIC(zD3DXVECTOR3, g_EnemyPosVector);
+DIFFABLE_STATIC(zD3DXVECTOR3, g_PlayerPosVector);
 
 void MoveDirTime(Enemy *enemy, EclRawInstr *instr)
 {
@@ -59,7 +59,7 @@ void MoveDirTime(Enemy *enemy, EclRawInstr *instr)
 
 void MovePosTime(Enemy *enemy, EclRawInstr *instr)
 {
-    D3DXVECTOR3 newPos;
+    zD3DXVECTOR3 newPos;
     EclRawInstrAluArgs *alu = &instr->args.alu;
 
     newPos.x = *GetVarFloat(enemy, &alu->arg1.f32, NULL);
@@ -73,7 +73,7 @@ void MovePosTime(Enemy *enemy, EclRawInstr *instr)
     enemy->moveInterpTimer.SetCurrent(enemy->moveInterpStartTime);
 
     enemy->flags.unk1 = 2;
-    enemy->axisSpeed = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    enemy->axisSpeed = zD3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
 void MoveTime(Enemy *enemy, EclRawInstr *instr)
@@ -215,7 +215,7 @@ i32 *GetVar(Enemy *enemy, EclVarId *eclVarId, EclValueType *valueType)
         return &enemy->bossTimer.current;
 
     case ECL_VAR_PLAYER_DISTANCE:
-        g_PlayerDistance = D3DXVec3Length(&(g_Player.positionCenter - enemy->position));
+        g_PlayerDistance = zD3DXVec3Length(&(g_Player.positionCenter - enemy->position));
         if (valueType != NULL)
             *valueType = ECL_VALUE_TYPE_READONLY;
         return (i32 *)&g_PlayerDistance;
@@ -419,7 +419,7 @@ void ExInsCirnoRainbowBallJank(Enemy *enemy, EclRawInstr *instr)
     Bullet *currentBullet;
     i32 effectIndex;
     i32 i;
-    D3DXVECTOR3 velocityVector;
+    zD3DXVECTOR3 velocityVector;
 
     currentBullet = g_BulletManager.bullets;
     effectIndex = instr->args.exInstr.i32Param;
@@ -479,12 +479,12 @@ void ExInsShootAtRandomArea(Enemy *enemy, EclRawInstr *instr)
 void ExInsShootStarPattern(Enemy *enemy, EclRawInstr *instr)
 {
     // Variable names are more quick guesses at functionality than anything else, they should not be trusted
-    D3DXVECTOR3 baseTargetPosition;
+    zD3DXVECTOR3 baseTargetPosition;
     i32 i;
     f32 propsSpeedBackup;
     f32 patternPosition;
-    D3DXVECTOR3 starPatternTarget0;
-    D3DXVECTOR3 starPatterTarget1;
+    zD3DXVECTOR3 starPatternTarget0;
+    zD3DXVECTOR3 starPatterTarget1;
     f32 targetDistance;
 
     if (enemy->currentContext.var2 >= enemy->currentContext.var3)
@@ -656,13 +656,13 @@ void ExInsStage5Func5(Enemy *enemy, EclRawInstr *instr)
 
     if (enemy->currentContext.var2 % 9 == 0)
     {
-        D3DXVECTOR3 bpPositionOffset;
+        zD3DXVECTOR3 bpPositionOffset;
         f32 bulletAngle;
         f32 cosOut;
         i32 i;
-        D3DXVECTOR3 matrixIn;
+        zD3DXVECTOR3 matrixIn;
         f32 matrixInSeed;
-        D3DXVECTOR3 matrixOut;
+        zD3DXVECTOR3 matrixOut;
         f32 matrixOutSeed; // Later reused to store angles for trig function calls
         i32 patternPosition;
         f32 sinOut;
@@ -686,7 +686,7 @@ void ExInsStage5Func5(Enemy *enemy, EclRawInstr *instr)
 
         matrixOutSeed = 0.5f - patternPosition * 0.5f / 9.0f;
         matrixOut = g_Player.positionCenter - enemy->position;
-        D3DXVec3Normalize(&matrixIn, &matrixOut);
+        zD3DXVec3Normalize(&matrixIn, &matrixOut);
         if ((patternPosition & 1) != 0)
         {
             matrixInSeed = -256.0f;
@@ -739,7 +739,7 @@ void ExInsStage6XFunc6(Enemy *enemy, EclRawInstr *instr)
     f32 distanceModifier;
     Effect *effect;
     f32 finalAngle;
-    D3DXVECTOR3 particlePos;
+    zD3DXVECTOR3 particlePos;
 
     if (enemy->flags.unk15 != 0)
     {
@@ -803,7 +803,7 @@ void ExInsStage6Func7(Enemy *enemy, EclRawInstr *instr)
     i32 outerLoopCount;
     f32 randomAngleModifier;
 
-    D3DXVECTOR3 positionVectors[8];
+    zD3DXVECTOR3 positionVectors[8];
 
     attackType = instr->args.exInstr.i32Param;
     randomAngleModifier = g_Rng.GetRandomF32ZeroToOne() * (ZUN_PI * 2);
@@ -1073,7 +1073,7 @@ void ExInsStage4Func12(Enemy *enemy, EclRawInstr *instr)
     {
         if (enemy->lasers[i] != NULL && enemy->lasers[i]->inUse != 0)
         {
-            enemy->bulletProps.position = D3DXVECTOR3(64.0, 0.0, 0.0);
+            enemy->bulletProps.position = zD3DXVECTOR3(64.0, 0.0, 0.0);
             utils::Rotate(&enemy->bulletProps.position, &enemy->bulletProps.position, enemy->lasers[i]->angle);
             enemy->bulletProps.position += enemy->position;
             g_BulletManager.SpawnBulletPattern(&enemy->bulletProps);
@@ -1110,7 +1110,7 @@ void ExInsStageXFunc14(Enemy *enemy, EclRawInstr *instr)
 {
     f32 angleCos;
     f32 angleSin;
-    D3DXVECTOR3 bulletPosition;
+    zD3DXVECTOR3 bulletPosition;
     Laser *currentLaser;
     i32 i;
     f32 positionMultiplier;

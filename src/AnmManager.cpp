@@ -170,7 +170,7 @@ void AnmManager::SetupVertexBuffer()
     }
 }
 
-ZunResult AnmManager::LoadTexture(i32 textureIdx, char *textureName, i32 textureFormat, D3DCOLOR colorKey)
+ZunResult AnmManager::LoadTexture(i32 textureIdx, char *textureName, i32 textureFormat, ZunColor colorKey)
 {
     ReleaseTexture(textureIdx);
     this->imageDataArray[textureIdx] = FileSystem::OpenPath(textureName, 0);
@@ -206,7 +206,7 @@ ZunResult AnmManager::LoadTexture(i32 textureIdx, char *textureName, i32 texture
 
 #pragma var_order(surfaceDesc, data, lockedRectDst, lockedRectSrc, textureSrc, dstData0, srcData0, y0, x0, dstData1,   \
                   srcData1, y1, x1, dstData2, srcData2, y2, x2)
-ZunResult AnmManager::LoadTextureAlphaChannel(i32 textureIdx, char *textureName, i32 textureFormat, D3DCOLOR colorKey)
+ZunResult AnmManager::LoadTextureAlphaChannel(i32 textureIdx, char *textureName, i32 textureFormat, ZunColor colorKey)
 {
     struct Argb1555Pixel
     {
@@ -498,7 +498,7 @@ ZunResult AnmManager::SetActiveSprite(AnmVm *vm, u32 sprite_index)
 
     vm->activeSpriteIndex = (i16)sprite_index;
     vm->sprite = this->sprites + sprite_index;
-    D3DXMatrixIdentity(&vm->matrix);
+    zD3DXMatrixIdentity(&vm->matrix);
     vm->matrix.m[0][0] = vm->sprite->widthPx / vm->sprite->textureWidth;
     vm->matrix.m[1][1] = vm->sprite->heightPx / vm->sprite->textureHeight;
 
@@ -841,9 +841,9 @@ ZunResult AnmManager::DrawFacingCamera(AnmVm *vm)
 #pragma var_order(textureMatrix, rotationMatrix, worldTransformMatrix, scaledXCenter, scaledYCenter)
 ZunResult AnmManager::Draw3(AnmVm *vm)
 {
-    D3DXMATRIX worldTransformMatrix;
-    D3DXMATRIX rotationMatrix;
-    D3DXMATRIX textureMatrix;
+    zD3DXMATRIX worldTransformMatrix;
+    zD3DXMATRIX rotationMatrix;
+    zD3DXMATRIX textureMatrix;
     f32 scaledXCenter;
     f32 scaledYCenter;
 
@@ -866,20 +866,20 @@ ZunResult AnmManager::Draw3(AnmVm *vm)
 
     if (vm->rotation.x != 0.0)
     {
-        D3DXMatrixRotationX(&rotationMatrix, vm->rotation.x);
-        D3DXMatrixMultiply(&worldTransformMatrix, &worldTransformMatrix, &rotationMatrix);
+        zD3DXMatrixRotationX(&rotationMatrix, vm->rotation.x);
+        zD3DXMatrixMultiply(&worldTransformMatrix, &worldTransformMatrix, &rotationMatrix);
     }
 
     if (vm->rotation.y != 0.0)
     {
-        D3DXMatrixRotationY(&rotationMatrix, vm->rotation.y);
-        D3DXMatrixMultiply(&worldTransformMatrix, &worldTransformMatrix, &rotationMatrix);
+        zD3DXMatrixRotationY(&rotationMatrix, vm->rotation.y);
+        zD3DXMatrixMultiply(&worldTransformMatrix, &worldTransformMatrix, &rotationMatrix);
     }
 
     if (vm->rotation.z != 0.0)
     {
-        D3DXMatrixRotationZ(&rotationMatrix, vm->rotation.z);
-        D3DXMatrixMultiply(&worldTransformMatrix, &worldTransformMatrix, &rotationMatrix);
+        zD3DXMatrixRotationZ(&rotationMatrix, vm->rotation.z);
+        zD3DXMatrixMultiply(&worldTransformMatrix, &worldTransformMatrix, &rotationMatrix);
     }
 
     if ((vm->flags.anchor & AnmVmAnchor_Left) == 0)
@@ -905,7 +905,7 @@ ZunResult AnmManager::Draw3(AnmVm *vm)
     worldTransformMatrix.m[3][2] = vm->pos.z;
 
     // Now, set transform matrix.
-    g_Supervisor.d3dDevice->SetTransform(D3DTS_WORLD, &worldTransformMatrix);
+    g_Supervisor.d3dDevice->SetTransform(D3DTS_WORLD, (D3DMATRIX*)&worldTransformMatrix);
 
     // Load sprite if vm->sprite is not the same as current sprite.
     if (this->currentSprite != vm->sprite)
@@ -914,7 +914,7 @@ ZunResult AnmManager::Draw3(AnmVm *vm)
         textureMatrix = vm->matrix;
         textureMatrix.m[2][0] = vm->sprite->uvStart.x + vm->uvScrollPos.x;
         textureMatrix.m[2][1] = vm->sprite->uvStart.y + vm->uvScrollPos.y;
-        g_Supervisor.d3dDevice->SetTransform(D3DTS_TEXTURE0, &textureMatrix);
+        g_Supervisor.d3dDevice->SetTransform(D3DTS_TEXTURE0, (D3DMATRIX*)&textureMatrix);
         if (this->currentTexture != this->textures[vm->sprite->sourceFileIndex])
         {
             this->currentTexture = this->textures[vm->sprite->sourceFileIndex];
@@ -955,9 +955,9 @@ ZunResult AnmManager::Draw3(AnmVm *vm)
 #pragma var_order(textureMatrix, unusedMatrix, worldTransformMatrix)
 ZunResult AnmManager::Draw2(AnmVm *vm)
 {
-    D3DXMATRIX worldTransformMatrix;
-    D3DXMATRIX unusedMatrix;
-    D3DXMATRIX textureMatrix;
+    zD3DXMATRIX worldTransformMatrix;
+    zD3DXMATRIX unusedMatrix;
+    zD3DXMATRIX textureMatrix;
 
     if (!vm->flags.isVisible)
     {
@@ -992,7 +992,7 @@ ZunResult AnmManager::Draw2(AnmVm *vm)
     worldTransformMatrix.m[3][2] = vm->pos.z;
     worldTransformMatrix.m[0][0] *= vm->scaleX;
     worldTransformMatrix.m[1][1] *= -vm->scaleY;
-    g_Supervisor.d3dDevice->SetTransform(D3DTS_WORLD, &worldTransformMatrix);
+    g_Supervisor.d3dDevice->SetTransform(D3DTS_WORLD, (D3DMATRIX*)&worldTransformMatrix);
 
     if (this->currentSprite != vm->sprite)
     {
@@ -1000,7 +1000,7 @@ ZunResult AnmManager::Draw2(AnmVm *vm)
         textureMatrix = vm->matrix;
         textureMatrix.m[2][0] = vm->sprite->uvStart.x + vm->uvScrollPos.x;
         textureMatrix.m[2][1] = vm->sprite->uvStart.y + vm->uvScrollPos.y;
-        g_Supervisor.d3dDevice->SetTransform(D3DTS_TEXTURE0, &textureMatrix);
+        g_Supervisor.d3dDevice->SetTransform(D3DTS_TEXTURE0, (D3DMATRIX*)&textureMatrix);
         if (this->currentTexture != this->textures[vm->sprite->sourceFileIndex])
         {
             this->currentTexture = this->textures[vm->sprite->sourceFileIndex];
@@ -1151,12 +1151,12 @@ i32 AnmManager::ExecuteScript(AnmVm *vm)
             if (vm->flags.flag5 == 0)
             {
                 vm->pos =
-                    D3DXVECTOR3(*(f32 *)&curInstr->args[0], *(f32 *)&curInstr->args[1], *(f32 *)&curInstr->args[2]);
+                    zD3DXVECTOR3(*(f32 *)&curInstr->args[0], *(f32 *)&curInstr->args[1], *(f32 *)&curInstr->args[2]);
             }
             else
             {
                 vm->posOffset =
-                    D3DXVECTOR3(*(f32 *)&curInstr->args[0], *(f32 *)&curInstr->args[1], *(f32 *)&curInstr->args[2]);
+                    zD3DXVECTOR3(*(f32 *)&curInstr->args[0], *(f32 *)&curInstr->args[1], *(f32 *)&curInstr->args[2]);
             }
             break;
         case AnmOpcode_PosTimeAccel:
@@ -1170,14 +1170,14 @@ i32 AnmManager::ExecuteScript(AnmVm *vm)
         PosTimeDoStuff:
             if (vm->flags.flag5 == 0)
             {
-                memcpy(vm->posInterpInitial, vm->pos, sizeof(D3DXVECTOR3));
+                memcpy(&vm->posInterpInitial, &vm->pos, sizeof(zD3DXVECTOR3));
             }
             else
             {
-                memcpy(vm->posInterpInitial, vm->posOffset, sizeof(D3DXVECTOR3));
+                memcpy(&vm->posInterpInitial, &vm->posOffset, sizeof(zD3DXVECTOR3));
             }
             vm->posInterpFinal =
-                D3DXVECTOR3(*(f32 *)&curInstr->args[0], *(f32 *)&curInstr->args[1], *(f32 *)&curInstr->args[2]);
+                zD3DXVECTOR3(*(f32 *)&curInstr->args[0], *(f32 *)&curInstr->args[1], *(f32 *)&curInstr->args[2]);
             vm->posInterpEndTime = curInstr->args[3];
             vm->posInterpTime.InitializeForPopup();
             break;

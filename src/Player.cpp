@@ -153,7 +153,7 @@ ChainCallbackResult Player::OnUpdate(Player *p)
 {
     f32 scaleFactor1, scaleFactor2;
     i32 idx;
-    D3DXVECTOR3 lastEnemyHit;
+    zD3DXVECTOR3 lastEnemyHit;
 
     if (g_GameManager.isTimeStopped)
     {
@@ -340,7 +340,7 @@ ChainCallbackResult Player::OnUpdate(Player *p)
 }
 
 #pragma var_order(bullet, idx, enemyBottomRight, bulletBottomRight, enemyTopLeft, damage, bulletTopLeft)
-i32 Player::CalcDamageToEnemy(D3DXVECTOR3 *enemyPos, D3DXVECTOR3 *enemyHitboxSize, ZunBool *hitWithLazerDuringBomb)
+i32 Player::CalcDamageToEnemy(zD3DXVECTOR3 *enemyPos, zD3DXVECTOR3 *enemyHitboxSize, ZunBool *hitWithLazerDuringBomb)
 {
     ZunVec3 bulletTopLeft;
     i32 damage;
@@ -1017,7 +1017,7 @@ ZunResult Player::UpdateFireBulletsTimer(Player *p)
 }
 
 #pragma var_order(relY, relX)
-f32 Player::AngleFromPlayer(D3DXVECTOR3 *pos)
+f32 Player::AngleFromPlayer(zD3DXVECTOR3 *pos)
 {
     f32 relX;
     f32 relY;
@@ -1032,7 +1032,7 @@ f32 Player::AngleFromPlayer(D3DXVECTOR3 *pos)
 }
 
 #pragma var_order(relY, relX)
-f32 Player::AngleToPlayer(D3DXVECTOR3 *pos)
+f32 Player::AngleToPlayer(zD3DXVECTOR3 *pos)
 {
     f32 relX;
     f32 relY;
@@ -1205,13 +1205,13 @@ FireBulletResult Player::FireBulletMarisaB(Player *player, PlayerBullet *bullet,
 }
 
 #pragma var_order(bombTopLeft, i, bulletBottomRight, bulletTopLeft, bombProjectile, bombBottomRight)
-i32 Player::CheckGraze(D3DXVECTOR3 *center, D3DXVECTOR3 *size)
+i32 Player::CheckGraze(zD3DXVECTOR3 *center, zD3DXVECTOR3 *size)
 {
-    D3DXVECTOR3 bombBottomRight;
+    zD3DXVECTOR3 bombBottomRight;
     PlayerRect *bombProjectile;
-    D3DXVECTOR3 bombTopLeft;
-    D3DXVECTOR3 bulletBottomRight;
-    D3DXVECTOR3 bulletTopLeft;
+    zD3DXVECTOR3 bombTopLeft;
+    zD3DXVECTOR3 bulletBottomRight;
+    zD3DXVECTOR3 bulletTopLeft;
     i32 i;
 
     bulletTopLeft.x = center->x - size->x / 2.0f - 20.0f;
@@ -1258,7 +1258,7 @@ i32 Player::CheckGraze(D3DXVECTOR3 *center, D3DXVECTOR3 *size)
 #pragma var_order(padding1, bombProjectileTop, bombProjectileLeft, curBombIdx, padding2, bulletBottom, bulletRight,    \
                   padding3, bulletTop, bulletLeft, curBombProjectile, padding4, bombProjectileBottom,                  \
                   bombProjectileRight)
-i32 Player::CalcKillBoxCollision(D3DXVECTOR3 *bulletCenter, D3DXVECTOR3 *bulletSize)
+i32 Player::CalcKillBoxCollision(zD3DXVECTOR3 *bulletCenter, zD3DXVECTOR3 *bulletSize)
 {
     PlayerRect *curBombProjectile;
     f32 bulletLeft, bulletTop, bulletRight, bulletBottom;
@@ -1304,13 +1304,13 @@ i32 Player::CalcKillBoxCollision(D3DXVECTOR3 *bulletCenter, D3DXVECTOR3 *bulletS
 }
 
 #pragma var_order(playerRelativeTopLeft, laserBottomRight, laserTopLeft, playerRelativeBottomRight)
-i32 Player::CalcLaserHitbox(D3DXVECTOR3 *laserCenter, D3DXVECTOR3 *laserSize, D3DXVECTOR3 *rotation, f32 angle,
+i32 Player::CalcLaserHitbox(zD3DXVECTOR3 *laserCenter, zD3DXVECTOR3 *laserSize, zD3DXVECTOR3 *rotation, f32 angle,
                             i32 canGraze)
 {
-    D3DXVECTOR3 laserTopLeft;
-    D3DXVECTOR3 laserBottomRight;
-    D3DXVECTOR3 playerRelativeTopLeft;
-    D3DXVECTOR3 playerRelativeBottomRight;
+    zD3DXVECTOR3 laserTopLeft;
+    zD3DXVECTOR3 laserBottomRight;
+    zD3DXVECTOR3 playerRelativeTopLeft;
+    zD3DXVECTOR3 playerRelativeBottomRight;
 
     laserTopLeft = this->positionCenter - *rotation;
     utils::Rotate(&laserBottomRight, &laserTopLeft, angle);
@@ -1361,16 +1361,16 @@ LASER_COLLISION:
 }
 
 #pragma var_order(itemBottomRight, itemTopLeft)
-i32 Player::CalcItemBoxCollision(D3DXVECTOR3 *itemCenter, D3DXVECTOR3 *itemSize)
+i32 Player::CalcItemBoxCollision(zD3DXVECTOR3 *itemCenter, zD3DXVECTOR3 *itemSize)
 {
     if (this->playerState != PLAYER_STATE_ALIVE && this->playerState != PLAYER_STATE_INVULNERABLE)
     {
         return 0;
     }
-    D3DXVECTOR3 itemTopLeft;
-    memcpy(&itemTopLeft, &(*itemCenter - *itemSize / 2.0f), sizeof(D3DXVECTOR3));
-    D3DXVECTOR3 itemBottomRight;
-    memcpy(&itemBottomRight, &(*itemCenter + *itemSize / 2.0f), sizeof(D3DXVECTOR3));
+    zD3DXVECTOR3 itemTopLeft;
+    memcpy(&itemTopLeft, &(*itemCenter - *itemSize / 2.0f), sizeof(zD3DXVECTOR3));
+    zD3DXVECTOR3 itemBottomRight;
+    memcpy(&itemBottomRight, &(*itemCenter + *itemSize / 2.0f), sizeof(zD3DXVECTOR3));
 
     if (this->grabItemTopLeft.x > itemBottomRight.x || this->grabItemBottomRight.x < itemTopLeft.x ||
         this->grabItemTopLeft.y > itemBottomRight.y || this->grabItemBottomRight.y < itemTopLeft.y)
@@ -1383,9 +1383,9 @@ i32 Player::CalcItemBoxCollision(D3DXVECTOR3 *itemCenter, D3DXVECTOR3 *itemSize)
     }
 }
 
-void Player::ScoreGraze(D3DXVECTOR3 *center)
+void Player::ScoreGraze(zD3DXVECTOR3 *center)
 {
-    D3DXVECTOR3 particlePosition;
+    zD3DXVECTOR3 particlePosition;
 
     if (g_Player.bombInfo.isInUse == 0)
     {

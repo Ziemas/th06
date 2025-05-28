@@ -36,7 +36,7 @@ void CMyFont::Init(LPDIRECT3DDEVICE8 lpD3DDEV, int w, int h)
     DeleteObject(hFont);
 }
 // ----------------------------------------------------------------------------
-void CMyFont::Print(char *str, int x, int y, D3DCOLOR color)
+void CMyFont::Print(char *str, int x, int y, ZunColor color)
 {
     RECT rect;
     rect.left = x;

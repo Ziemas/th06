@@ -55,7 +55,7 @@ struct EffectManager
 
     static ChainCallbackResult OnDraw(EffectManager *mgr);
     void Reset();
-    Effect *SpawnParticles(i32 effectIdx, D3DXVECTOR3 *pos, i32 count, ZunColor color);
+    Effect *SpawnParticles(i32 effectIdx, zD3DXVECTOR3 *pos, i32 count, ZunColor color);
 };
 ZUN_ASSERT_SIZE(EffectManager, 0x2f984);
 

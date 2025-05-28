@@ -522,7 +522,7 @@ void Supervisor::DrawFpsCounter()
     float framerate;
     float elapsed;
     float fps;
-    D3DXVECTOR3 fpsCounterPos;
+    zD3DXVECTOR3 fpsCounterPos;
 
     static u32 g_NumFramesSinceLastTime = 0;
     static DWORD g_LastTime = timeGetTime();

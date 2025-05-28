@@ -8,7 +8,7 @@
 #include "SoundPlayer.hpp"
 #include "utils.hpp"
 
-#include <d3dx8math.h>
+#include "d3dx/D3DX.hpp"
 
 namespace th06
 {
@@ -18,7 +18,7 @@ ItemManager::ItemManager() {
 
 };
 
-void ItemManager::SpawnItem(D3DXVECTOR3 *position, ItemType itemType, int state)
+void ItemManager::SpawnItem(zD3DXVECTOR3 *position, ItemType itemType, int state)
 {
     Item *item;
     i32 idx;
@@ -97,7 +97,7 @@ void ItemManager::OnUpdate()
     i32 itemAcquired;
 
     curItem = &this->items[0];
-    static D3DXVECTOR3 g_ItemSize(16.0f, 16.0f, 16.0f);
+    static zD3DXVECTOR3 g_ItemSize(16.0f, 16.0f, 16.0f);
     itemAcquired = false;
     this->itemCount = 0;
     for (idx = 0; idx < ARRAY_SIZE_SIGNED(this->items); idx++, curItem++)
@@ -117,7 +117,7 @@ void ItemManager::OnUpdate()
             }
             else if ((i32)(curItem->timer.current == 60))
             {
-                curItem->startPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+                curItem->startPosition = zD3DXVECTOR3(0.0f, 0.0f, 0.0f);
             }
         }
         else

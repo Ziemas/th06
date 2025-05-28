@@ -1,7 +1,7 @@
 #pragma once
 
 #include <d3d8.h>
-#include <d3dx8math.h>
+#include "d3dx/D3DX.hpp"
 #include <dinput.h>
 
 #include "Chain.hpp"
@@ -153,8 +153,8 @@ struct Supervisor
     LPDIRECTINPUTDEVICE8A controller;
     DIDEVCAPS controllerCaps;
     HWND hwndGameWindow;
-    D3DXMATRIX viewMatrix;
-    D3DXMATRIX projectionMatrix;
+    zD3DXMATRIX viewMatrix;
+    zD3DXMATRIX projectionMatrix;
     D3DVIEWPORT8 viewport;
     D3DPRESENT_PARAMETERS presentParameters;
     GameConfiguration cfg;

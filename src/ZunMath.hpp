@@ -2,7 +2,8 @@
 #include "diffbuild.hpp"
 #include "inttypes.hpp"
 #include <Windows.h>
-#include <d3dx8math.h>
+#include "d3dx/D3DX.hpp"
+#include <cmath>
 
 struct ZunVec2
 {
@@ -19,9 +20,9 @@ struct ZunVec2
         return (f64)this->VectorLength();
     }
 
-    D3DXVECTOR2 *AsD3dXVec()
+    zD3DXVECTOR2 *AsD3dXVec()
     {
-        return (D3DXVECTOR2 *)this;
+        return (zD3DXVECTOR2 *)this;
     }
 };
 ZUN_ASSERT_SIZE(ZunVec2, 0x8);
@@ -32,13 +33,13 @@ struct ZunVec3
     f32 y;
     f32 z;
 
-    D3DXVECTOR3 *AsD3dXVec()
+    zD3DXVECTOR3 *AsD3dXVec()
     {
-        return (D3DXVECTOR3 *)this;
+        return (zD3DXVECTOR3 *)this;
     }
 
-    static void SetVecCorners(ZunVec3 *topLeftCorner, ZunVec3 *bottomRightCorner, const D3DXVECTOR3 *centerPosition,
-                              const D3DXVECTOR3 *size)
+    static void SetVecCorners(ZunVec3 *topLeftCorner, ZunVec3 *bottomRightCorner, const zD3DXVECTOR3 *centerPosition,
+                              const zD3DXVECTOR3 *size)
     {
         topLeftCorner->x = centerPosition->x - size->x / 2.0f;
         topLeftCorner->y = centerPosition->y - size->y / 2.0f;

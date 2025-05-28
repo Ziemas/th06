@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 #include <d3d8.h>
-#include <d3dx8math.h>
+#include "d3dx/D3DX.hpp"
 
 #include "Chain.hpp"
 #include "ResultScreen.hpp"
@@ -122,12 +122,12 @@ struct GameManager
     u32 gameFrames;
     i32 currentStage;
     u32 menuCursorBackup;
-    D3DXVECTOR2 arcadeRegionTopLeftPos;
-    D3DXVECTOR2 arcadeRegionSize;
-    D3DXVECTOR2 playerMovementAreaTopLeftPos;
-    D3DXVECTOR2 playerMovementAreaSize;
+    zD3DXVECTOR2 arcadeRegionTopLeftPos;
+    zD3DXVECTOR2 arcadeRegionSize;
+    zD3DXVECTOR2 playerMovementAreaTopLeftPos;
+    zD3DXVECTOR2 playerMovementAreaSize;
     f32 cameraDistance;
-    D3DXVECTOR3 stageCameraFacingDir;
+    zD3DXVECTOR3 stageCameraFacingDir;
     i32 counat;
     i32 rank;
     i32 maxRank;

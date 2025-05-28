@@ -386,7 +386,7 @@ void BulletManager::RemoveAllBullets(ZunBool turnIntoItem)
     Laser *laser;
     Bullet *bullet;
     i32 i;
-    D3DXVECTOR3 itemPos;
+    zD3DXVECTOR3 itemPos;
 
     for (bullet = &g_BulletManager.bullets[0], i = 0; i < ARRAY_SIZE_SIGNED(g_BulletManager.bullets); i++, bullet++)
     {
@@ -455,7 +455,7 @@ i32 BulletManager::DespawnBullets(i32 maxBonusScore, ZunBool awardPoints)
     f32 offset;
     Laser *laser;
     Bullet *bullets;
-    D3DXVECTOR3 itemPos;
+    zD3DXVECTOR3 itemPos;
 
     totalBonusScore = 0;
     bulletScore = 2000;
@@ -652,9 +652,9 @@ ZunResult BulletManager::RegisterChain(char *bulletAnmPath)
 ChainCallbackResult BulletManager::OnUpdate(BulletManager *mgr)
 {
     i32 res;
-    D3DXVECTOR3 laserSize;
+    zD3DXVECTOR3 laserSize;
     i32 laserColor;
-    D3DXVECTOR3 laserCenter;
+    zD3DXVECTOR3 laserCenter;
     f32 local_14;
 
     Bullet *curBullet;

@@ -2,6 +2,7 @@
 #include "GameWindow.hpp"
 #include "Supervisor.hpp"
 #include "i18n.hpp"
+#include <d3dx8.h>
 
 namespace th06
 {
