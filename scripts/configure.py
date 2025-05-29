@@ -111,7 +111,6 @@ def configure(build_type):
             "GameManager",
             "Chain",
             "Controller",
-            "CMyFont",
             "FileSystem",
             "GameErrorContext",
             "Rng",
