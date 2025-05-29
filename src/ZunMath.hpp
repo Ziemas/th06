@@ -5,49 +5,14 @@
 #include "d3dx/D3DX.hpp"
 #include <cmath>
 
-struct ZunVec2
+static void SetVecCorners(zVec3 *topLeftCorner, zVec3 *bottomRightCorner, const zVec3 *centerPosition,
+                            const zVec3 *size)
 {
-    f32 x;
-    f32 y;
-
-    f32 VectorLength()
-    {
-        return sqrt(this->x * this->x + this->y * this->y);
-    }
-
-    f64 VectorLengthF64()
-    {
-        return (f64)this->VectorLength();
-    }
-
-    zD3DXVECTOR2 *AsD3dXVec()
-    {
-        return (zD3DXVECTOR2 *)this;
-    }
-};
-ZUN_ASSERT_SIZE(ZunVec2, 0x8);
-
-struct ZunVec3
-{
-    f32 x;
-    f32 y;
-    f32 z;
-
-    zD3DXVECTOR3 *AsD3dXVec()
-    {
-        return (zD3DXVECTOR3 *)this;
-    }
-
-    static void SetVecCorners(ZunVec3 *topLeftCorner, ZunVec3 *bottomRightCorner, const zD3DXVECTOR3 *centerPosition,
-                              const zD3DXVECTOR3 *size)
-    {
-        topLeftCorner->x = centerPosition->x - size->x / 2.0f;
-        topLeftCorner->y = centerPosition->y - size->y / 2.0f;
-        bottomRightCorner->x = size->x / 2.0f + centerPosition->x;
-        bottomRightCorner->y = size->y / 2.0f + centerPosition->y;
-    }
-};
-ZUN_ASSERT_SIZE(ZunVec3, 0xC);
+    topLeftCorner->x = centerPosition->x - size->x / 2.0f;
+    topLeftCorner->y = centerPosition->y - size->y / 2.0f;
+    bottomRightCorner->x = size->x / 2.0f + centerPosition->x;
+    bottomRightCorner->y = size->y / 2.0f + centerPosition->y;
+}
 
 #define ZUN_MIN(x, y) ((x) > (y) ? (y) : (x))
 #define ZUN_PI ((f32)(3.14159265358979323846))
@@ -77,7 +42,7 @@ void __inline fsincos_wrapper(f32 *out_sine, f32 *out_cosine, f32 angle)
 
 #define sincos(in, out_sine, out_cosine) fsincos_wrapper(&out_sine, &out_cosine, in)
 
-void __inline sincosmul(zD3DXVECTOR3 *out_vel, f32 input, f32 multiplier)
+void __inline sincosmul(zVec3 *out_vel, f32 input, f32 multiplier)
 {
     f32 sin, cos;
     fsincos_wrapper(&sin, &cos, input);

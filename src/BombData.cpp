@@ -22,9 +22,9 @@ void BombData::BombReimuACalc(Player *player)
     i32 i;
     f32 vecLength;
     i32 bombIdx;
-    zD3DXVECTOR3 bombPivot;
+    zVec3 bombPivot;
     AnmVm *bombSprite;
-    ZunVec2 angle;
+    zVec2 angle;
 
     if (player->bombInfo.timer >= player->bombInfo.duration)
     {
@@ -255,7 +255,6 @@ void BombData::BombReimuBCalc(Player *player)
 {
     AnmVm *bombSprite;
     i32 i;
-    D3DXVECTOR3 unusedVector;
 
     if (player->bombInfo.timer >= player->bombInfo.duration)
     {
@@ -464,7 +463,6 @@ void BombData::BombMarisaBCalc(Player *player)
 {
     AnmVm *bombSprite;
     i32 i;
-    D3DXVECTOR3 unusedVector;
 
     if (player->bombInfo.timer >= player->bombInfo.duration)
     {

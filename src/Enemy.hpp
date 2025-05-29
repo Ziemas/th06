@@ -28,7 +28,7 @@ struct EnemyBulletShooter
     }
     i16 sprite;
     i16 spriteOffset;
-    zD3DXVECTOR3 position;
+    zVec3 position;
     f32 angle1;
     f32 angle2;
     f32 speed1;
@@ -53,7 +53,7 @@ struct EnemyLaserShooter
     }
     i16 sprite;
     i16 spriteOffset;
-    zD3DXVECTOR3 position;
+    zVec3 position;
     f32 angle;
     u32 unk_14;
     f32 speed;
@@ -151,7 +151,7 @@ struct Enemy
         return (f32)this->life / (f32)this->maxLife;
     }
 
-    zD3DXVECTOR3 HitboxDimensions(f32 shrinkFactor)
+    zVec3 HitboxDimensions(f32 shrinkFactor)
     {
         return (1.0f / shrinkFactor) * this->hitboxDimensions;
     }
@@ -205,16 +205,16 @@ struct Enemy
     i32 deathCallbackSub;
     i32 interrupts[8];
     i32 runInterrupt;
-    zD3DXVECTOR3 position;
-    zD3DXVECTOR3 hitboxDimensions;
-    zD3DXVECTOR3 axisSpeed;
+    zVec3 position;
+    zVec3 hitboxDimensions;
+    zVec3 axisSpeed;
     f32 angle;
     f32 angularVelocity;
     f32 speed;
     f32 acceleration;
-    zD3DXVECTOR3 shootOffset;
-    zD3DXVECTOR3 moveInterp;
-    zD3DXVECTOR3 moveInterpStartPos;
+    zVec3 shootOffset;
+    zVec3 moveInterp;
+    zVec3 moveInterpStartPos;
     ZunTimer moveInterpTimer;
     i32 moveInterpStartTime;
     f32 bulletRankSpeedLow;
@@ -248,8 +248,8 @@ struct Enemy
     i16 anmExFarRight;
     i16 anmExLeft;
     i16 anmExRight;
-    zD3DXVECTOR2 lowerMoveLimit;
-    zD3DXVECTOR2 upperMoveLimit;
+    zVec2 lowerMoveLimit;
+    zVec2 upperMoveLimit;
     Effect *effectArray[12];
     u32 effectIdx;
     f32 effectDistance;

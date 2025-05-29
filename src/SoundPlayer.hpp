@@ -65,7 +65,7 @@ struct SoundPlayer
     ZunResult LoadSound(i32 idx, char *path);
     static WAVEFORMATEX *GetWavFormatData(u8 *soundData, char *formatString, i32 *formatSize,
                                           u32 fileSizeExcludingFormat);
-    void PlaySounds();
+    void PlaySounds(); // update tick
     void PlaySoundByIdx(SoundIdx idx, i32 unused);
     ZunResult PlayBGM(BOOL isLooping);
     void StopBGM();

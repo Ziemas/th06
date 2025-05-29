@@ -31,7 +31,7 @@ struct EnemyManager
     static ZunResult DeletedCallback(EnemyManager *enemyManager);
 
     void RunEclTimeline();
-    Enemy *SpawnEnemy(i32 eclSubId, zD3DXVECTOR3 *pos, i16 life, i16 itemDrop, i32 score);
+    Enemy *SpawnEnemy(i32 eclSubId, zVec3 *pos, i16 life, i16 itemDrop, i32 score);
 
     char *stgEnmAnmFilename;
     char *stgEnm2AnmFilename;

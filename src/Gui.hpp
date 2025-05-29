@@ -87,7 +87,7 @@ ZUN_ASSERT_SIZE(GuiMsgVm, 0x6a8);
 
 struct GuiFormattedText
 {
-    zD3DXVECTOR3 pos;
+    zVec3 pos;
     i32 fmtArg;
     i32 isShown;
     ZunTimer timer;

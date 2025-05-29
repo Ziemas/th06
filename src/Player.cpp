@@ -153,7 +153,7 @@ ChainCallbackResult Player::OnUpdate(Player *p)
 {
     f32 scaleFactor1, scaleFactor2;
     i32 idx;
-    zD3DXVECTOR3 lastEnemyHit;
+    zVec3 lastEnemyHit;
 
     if (g_GameManager.isTimeStopped)
     {
@@ -340,20 +340,20 @@ ChainCallbackResult Player::OnUpdate(Player *p)
 }
 
 #pragma var_order(bullet, idx, enemyBottomRight, bulletBottomRight, enemyTopLeft, damage, bulletTopLeft)
-i32 Player::CalcDamageToEnemy(zD3DXVECTOR3 *enemyPos, zD3DXVECTOR3 *enemyHitboxSize, ZunBool *hitWithLazerDuringBomb)
+i32 Player::CalcDamageToEnemy(zVec3 *enemyPos, zVec3 *enemyHitboxSize, ZunBool *hitWithLazerDuringBomb)
 {
-    ZunVec3 bulletTopLeft;
+    zVec3 bulletTopLeft;
     i32 damage;
-    ZunVec3 enemyTopLeft;
+    zVec3 enemyTopLeft;
     i32 idx;
     PlayerBullet *bullet;
 
-    ZunVec3 bulletBottomRight;
-    ZunVec3 enemyBottomRight;
+    zVec3 bulletBottomRight;
+    zVec3 enemyBottomRight;
 
     damage = 0;
 
-    ZunVec3::SetVecCorners(&enemyTopLeft, &enemyBottomRight, enemyPos, enemyHitboxSize);
+    SetVecCorners(&enemyTopLeft, &enemyBottomRight, enemyPos, enemyHitboxSize);
     bullet = &this->bullets[0];
     if (hitWithLazerDuringBomb)
     {
@@ -367,7 +367,7 @@ i32 Player::CalcDamageToEnemy(zD3DXVECTOR3 *enemyPos, zD3DXVECTOR3 *enemyHitboxS
             continue;
         }
 
-        ZunVec3::SetVecCorners(&bulletTopLeft, &bulletBottomRight, &bullet->position, &bullet->size);
+        SetVecCorners(&bulletTopLeft, &bulletBottomRight, &bullet->position, &bullet->size);
 
         if (bulletTopLeft.y > enemyBottomRight.y || bulletTopLeft.x > enemyBottomRight.x ||
             bulletBottomRight.y < enemyTopLeft.y || bulletBottomRight.x < enemyTopLeft.x)
@@ -432,10 +432,10 @@ i32 Player::CalcDamageToEnemy(zD3DXVECTOR3 *enemyPos, zD3DXVECTOR3 *enemyHitboxS
             this->unk_9e4++;
             if (this->unk_9e4 % 8 == 0)
             {
-                *bulletTopLeft.AsD3dXVec() = *enemyPos;
+                bulletTopLeft = *enemyPos;
                 bulletTopLeft.x = bullet->position.x;
 
-                g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_5, bulletTopLeft.AsD3dXVec(), 1, COLOR_WHITE);
+                g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_5, &bulletTopLeft, 1, COLOR_WHITE);
             }
         }
     }
@@ -446,8 +446,8 @@ i32 Player::CalcDamageToEnemy(zD3DXVECTOR3 *enemyPos, zD3DXVECTOR3 *enemyHitboxS
             continue;
         }
 
-        *bulletTopLeft.AsD3dXVec() = this->bombRegionPositions[idx] - this->bombRegionSizes[idx] / 2.0f;
-        *bulletBottomRight.AsD3dXVec() = this->bombRegionPositions[idx] + this->bombRegionSizes[idx] / 2.0f;
+        bulletTopLeft = this->bombRegionPositions[idx] - this->bombRegionSizes[idx] / 2.0f;
+        bulletBottomRight = this->bombRegionPositions[idx] + this->bombRegionSizes[idx] / 2.0f;
         if (bulletTopLeft.x > enemyBottomRight.x || bulletBottomRight.x < enemyTopLeft.x ||
             bulletTopLeft.y > enemyBottomRight.y || bulletBottomRight.y < enemyTopLeft.y)
         {
@@ -471,7 +471,7 @@ i32 Player::CalcDamageToEnemy(zD3DXVECTOR3 *enemyPos, zD3DXVECTOR3 *enemyHitboxS
 #pragma var_order(vector, idx, vecLength, bullet)
 void Player::UpdatePlayerBullets(Player *player)
 {
-    ZunVec2 vector;
+    zVec2 vector;
     PlayerBullet *bullet;
     f32 vecLength;
     i32 idx;
@@ -511,7 +511,7 @@ void Player::UpdatePlayerBullets(Player *player)
                     vector.x = vector.x / vecLength + bullet->velocity.x;
                     vector.y = vector.y / vecLength + bullet->velocity.y;
 
-                    vecLength = vector.VectorLengthF64();
+                    vecLength = vector.VectorLength();
 
                     bullet->unk_134.y = ZUN_MIN(vecLength, 10.0f);
 
@@ -530,7 +530,7 @@ void Player::UpdatePlayerBullets(Player *player)
                         bullet->unk_134.y += 0.33333333f;
                         vector.x = bullet->velocity.x;
                         vector.y = bullet->velocity.y;
-                        vecLength = vector.VectorLengthF64();
+                        vecLength = vector.VectorLength();
                         bullet->velocity.x = vector.x * bullet->unk_134.y / vecLength;
                         bullet->velocity.y = vector.y * bullet->unk_134.y / vecLength;
                     }
@@ -1017,7 +1017,7 @@ ZunResult Player::UpdateFireBulletsTimer(Player *p)
 }
 
 #pragma var_order(relY, relX)
-f32 Player::AngleFromPlayer(zD3DXVECTOR3 *pos)
+f32 Player::AngleFromPlayer(zVec3 *pos)
 {
     f32 relX;
     f32 relY;
@@ -1032,7 +1032,7 @@ f32 Player::AngleFromPlayer(zD3DXVECTOR3 *pos)
 }
 
 #pragma var_order(relY, relX)
-f32 Player::AngleToPlayer(zD3DXVECTOR3 *pos)
+f32 Player::AngleToPlayer(zVec3 *pos)
 {
     f32 relX;
     f32 relY;
@@ -1123,8 +1123,8 @@ FireBulletResult Player::FireSingleBullet(Player *player, PlayerBullet *bullet, 
 
             bullet->unk_152 = bulletFrame;
             bullet->spawnPositionIdx = bulletData->spawnPositionIdx;
-            bullet->sidewaysMotion = bulletData->motion.x;
-            bullet->unk_134.x = bulletData->motion.y;
+            bullet->sidewaysMotion = bulletData->motion[0];
+            bullet->unk_134.x = bulletData->motion[1];
             goto SHOOT_BULLET;
         }
     }
@@ -1142,14 +1142,14 @@ FireBulletResult Player::FireSingleBullet(Player *player, PlayerBullet *bullet, 
             bullet->position = player->orbsPosition[bulletData->spawnPositionIdx - 1];
         }
         pfVar4 = &bullet->position.x;
-        *pfVar4 = *pfVar4 + bulletData->motion.x;
+        *pfVar4 = *pfVar4 + bulletData->motion[0];
         pfVar4 = &bullet->position.y;
-        *pfVar4 = *pfVar4 + bulletData->motion.y;
+        *pfVar4 = *pfVar4 + bulletData->motion[1];
 
         bullet->position.z = 0.495f;
 
-        bullet->size.x = bulletData->size.x;
-        bullet->size.y = bulletData->size.y;
+        bullet->size.x = bulletData->size[0];
+        bullet->size.y = bulletData->size[1];
         bullet->size.z = 1.0f;
         bullet->unk_134.z = bulletData->direction;
         bullet->unk_134.y = bulletData->velocity;
@@ -1205,13 +1205,13 @@ FireBulletResult Player::FireBulletMarisaB(Player *player, PlayerBullet *bullet,
 }
 
 #pragma var_order(bombTopLeft, i, bulletBottomRight, bulletTopLeft, bombProjectile, bombBottomRight)
-i32 Player::CheckGraze(zD3DXVECTOR3 *center, zD3DXVECTOR3 *size)
+i32 Player::CheckGraze(zVec3 *center, zVec3 *size)
 {
-    zD3DXVECTOR3 bombBottomRight;
+    zVec3 bombBottomRight;
     PlayerRect *bombProjectile;
-    zD3DXVECTOR3 bombTopLeft;
-    zD3DXVECTOR3 bulletBottomRight;
-    zD3DXVECTOR3 bulletTopLeft;
+    zVec3 bombTopLeft;
+    zVec3 bulletBottomRight;
+    zVec3 bulletTopLeft;
     i32 i;
 
     bulletTopLeft.x = center->x - size->x / 2.0f - 20.0f;
@@ -1258,7 +1258,7 @@ i32 Player::CheckGraze(zD3DXVECTOR3 *center, zD3DXVECTOR3 *size)
 #pragma var_order(padding1, bombProjectileTop, bombProjectileLeft, curBombIdx, padding2, bulletBottom, bulletRight,    \
                   padding3, bulletTop, bulletLeft, curBombProjectile, padding4, bombProjectileBottom,                  \
                   bombProjectileRight)
-i32 Player::CalcKillBoxCollision(zD3DXVECTOR3 *bulletCenter, zD3DXVECTOR3 *bulletSize)
+i32 Player::CalcKillBoxCollision(zVec3 *bulletCenter, zVec3 *bulletSize)
 {
     PlayerRect *curBombProjectile;
     f32 bulletLeft, bulletTop, bulletRight, bulletBottom;
@@ -1304,13 +1304,13 @@ i32 Player::CalcKillBoxCollision(zD3DXVECTOR3 *bulletCenter, zD3DXVECTOR3 *bulle
 }
 
 #pragma var_order(playerRelativeTopLeft, laserBottomRight, laserTopLeft, playerRelativeBottomRight)
-i32 Player::CalcLaserHitbox(zD3DXVECTOR3 *laserCenter, zD3DXVECTOR3 *laserSize, zD3DXVECTOR3 *rotation, f32 angle,
+i32 Player::CalcLaserHitbox(zVec3 *laserCenter, zVec3 *laserSize, zVec3 *rotation, f32 angle,
                             i32 canGraze)
 {
-    zD3DXVECTOR3 laserTopLeft;
-    zD3DXVECTOR3 laserBottomRight;
-    zD3DXVECTOR3 playerRelativeTopLeft;
-    zD3DXVECTOR3 playerRelativeBottomRight;
+    zVec3 laserTopLeft;
+    zVec3 laserBottomRight;
+    zVec3 playerRelativeTopLeft;
+    zVec3 playerRelativeBottomRight;
 
     laserTopLeft = this->positionCenter - *rotation;
     utils::Rotate(&laserBottomRight, &laserTopLeft, angle);
@@ -1361,16 +1361,16 @@ LASER_COLLISION:
 }
 
 #pragma var_order(itemBottomRight, itemTopLeft)
-i32 Player::CalcItemBoxCollision(zD3DXVECTOR3 *itemCenter, zD3DXVECTOR3 *itemSize)
+i32 Player::CalcItemBoxCollision(zVec3 *itemCenter, zVec3 *itemSize)
 {
     if (this->playerState != PLAYER_STATE_ALIVE && this->playerState != PLAYER_STATE_INVULNERABLE)
     {
         return 0;
     }
-    zD3DXVECTOR3 itemTopLeft;
-    memcpy(&itemTopLeft, &(*itemCenter - *itemSize / 2.0f), sizeof(zD3DXVECTOR3));
-    zD3DXVECTOR3 itemBottomRight;
-    memcpy(&itemBottomRight, &(*itemCenter + *itemSize / 2.0f), sizeof(zD3DXVECTOR3));
+    zVec3 itemTopLeft;
+    memcpy(&itemTopLeft, &(*itemCenter - *itemSize / 2.0f), sizeof(zVec3));
+    zVec3 itemBottomRight;
+    memcpy(&itemBottomRight, &(*itemCenter + *itemSize / 2.0f), sizeof(zVec3));
 
     if (this->grabItemTopLeft.x > itemBottomRight.x || this->grabItemBottomRight.x < itemTopLeft.x ||
         this->grabItemTopLeft.y > itemBottomRight.y || this->grabItemBottomRight.y < itemTopLeft.y)
@@ -1383,9 +1383,9 @@ i32 Player::CalcItemBoxCollision(zD3DXVECTOR3 *itemCenter, zD3DXVECTOR3 *itemSiz
     }
 }
 
-void Player::ScoreGraze(zD3DXVECTOR3 *center)
+void Player::ScoreGraze(zVec3 *center)
 {
-    zD3DXVECTOR3 particlePosition;
+    zVec3 particlePosition;
 
     if (g_Player.bombInfo.isInUse == 0)
     {

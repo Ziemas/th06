@@ -153,8 +153,8 @@ struct Supervisor
     LPDIRECTINPUTDEVICE8A controller;
     DIDEVCAPS controllerCaps;
     HWND hwndGameWindow;
-    zD3DXMATRIX viewMatrix;
-    zD3DXMATRIX projectionMatrix;
+    zMatrix viewMatrix;
+    zMatrix projectionMatrix;
     D3DVIEWPORT8 viewport;
     D3DPRESENT_PARAMETERS presentParameters;
     GameConfiguration cfg;

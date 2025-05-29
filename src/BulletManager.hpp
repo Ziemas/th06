@@ -32,7 +32,7 @@ struct BulletTypeSprites
     AnmVm spriteSpawnEffectSlow;
     AnmVm spriteSpawnEffectDonut;
 
-    zD3DXVECTOR3 grazeSize;
+    zVec3 grazeSize;
     u8 unk_55c;
     u8 bulletHeight;
 };
@@ -41,9 +41,9 @@ ZUN_ASSERT_SIZE(BulletTypeSprites, 0x560);
 struct Bullet
 {
     BulletTypeSprites sprites;
-    zD3DXVECTOR3 pos;
-    zD3DXVECTOR3 velocity;
-    zD3DXVECTOR3 ex4Acceleration;
+    zVec3 pos;
+    zVec3 velocity;
+    zVec3 ex4Acceleration;
     f32 speed;
     f32 ex5Float0;
     f32 dirChangeSpeed;
@@ -69,7 +69,7 @@ struct Laser
 {
     AnmVm vm0;
     AnmVm vm1;
-    zD3DXVECTOR3 pos;
+    zVec3 pos;
     f32 angle;
     f32 startOffset;
     f32 endOffset;

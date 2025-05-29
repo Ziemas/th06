@@ -84,7 +84,7 @@ ZunResult EclManager::RunEcl(Enemy *enemy)
 {
     EclRawInstr *instruction;
     EclRawInstrArgs *args;
-    ZunVec3 local_8;
+    zVec3 local_8;
     i32 local_14, local_24, local_28, local_2c, *local_3c, *local_40, local_44, local_48, local_68, local_74, csum,
         scoreIncrease, local_84, local_88, local_8c, local_b8, local_c0;
     f32 local_18, local_30, local_34, local_38, local_4c, local_50, local_bc;
@@ -95,7 +95,7 @@ ZunResult EclManager::RunEcl(Enemy *enemy)
     EnemyLaserShooter *local_60;
     EclRawInstrLaserArgs *local_64;
     EclRawInstrSpellcardEffectArgs *local_6c;
-    zD3DXVECTOR3 local_98;
+    zVec3 local_98;
     EclRawInstrEnemyCreateArgs local_b0;
     Enemy *local_b4;
 
@@ -307,14 +307,14 @@ ZunResult EclManager::RunEcl(Enemy *enemy)
                                                      args->anmSetSlot.scriptIdx + ANM_SCRIPT_ENEMY_START);
                 break;
             case ECL_OPCODE_MOVEPOSITION:
-                enemy->position = *instruction->args.move.pos.AsD3dXVec();
+                enemy->position = zVec3(instruction->args.move.pos);
                 enemy->position.x = *EnemyEclInstr::GetVarFloat(enemy, &enemy->position.x, NULL);
                 enemy->position.y = *EnemyEclInstr::GetVarFloat(enemy, &enemy->position.y, NULL);
                 enemy->position.z = *EnemyEclInstr::GetVarFloat(enemy, &enemy->position.z, NULL);
                 enemy->ClampPos();
                 break;
             case ECL_OPCODE_MOVEAXISVELOCITY:
-                enemy->axisSpeed = *instruction->args.move.pos.AsD3dXVec();
+                enemy->axisSpeed = zVec3(instruction->args.move.pos);
                 enemy->axisSpeed.x = *EnemyEclInstr::GetVarFloat(enemy, &enemy->axisSpeed.x, NULL);
                 enemy->axisSpeed.y = *EnemyEclInstr::GetVarFloat(enemy, &enemy->axisSpeed.y, NULL);
                 enemy->axisSpeed.z = *EnemyEclInstr::GetVarFloat(enemy, &enemy->axisSpeed.z, NULL);
@@ -442,9 +442,9 @@ ZunResult EclManager::RunEcl(Enemy *enemy)
                 g_BulletManager.SpawnBulletPattern(&enemy->bulletProps);
                 break;
             case ECL_OPCODE_SHOOTOFFSET:
-                enemy->shootOffset.x = *EnemyEclInstr::GetVarFloat(enemy, &args->move.pos.x, NULL);
-                enemy->shootOffset.y = *EnemyEclInstr::GetVarFloat(enemy, &args->move.pos.y, NULL);
-                enemy->shootOffset.z = *EnemyEclInstr::GetVarFloat(enemy, &args->move.pos.z, NULL);
+                enemy->shootOffset.x = *EnemyEclInstr::GetVarFloat(enemy, &args->move.pos[0], NULL);
+                enemy->shootOffset.y = *EnemyEclInstr::GetVarFloat(enemy, &args->move.pos[1], NULL);
+                enemy->shootOffset.z = *EnemyEclInstr::GetVarFloat(enemy, &args->move.pos[2], NULL);
                 break;
             case ECL_OPCODE_LASERCREATE:
             case ECL_OPCODE_LASERCREATEAIMED:
@@ -482,7 +482,7 @@ ZunResult EclManager::RunEcl(Enemy *enemy)
                 if (enemy->lasers[instruction->args.laserOp.laserIdx] != NULL)
                 {
                     enemy->lasers[instruction->args.laserOp.laserIdx]->angle +=
-                        *EnemyEclInstr::GetVarFloat(enemy, &instruction->args.laserOp.arg1.x, NULL);
+                        *EnemyEclInstr::GetVarFloat(enemy, &instruction->args.laserOp.arg1[0], NULL);
                 }
                 break;
             case ECL_OPCODE_LASERROTATEFROMPLAYER:
@@ -490,14 +490,14 @@ ZunResult EclManager::RunEcl(Enemy *enemy)
                 {
                     enemy->lasers[instruction->args.laserOp.laserIdx]->angle =
                         g_Player.AngleToPlayer(&enemy->lasers[instruction->args.laserOp.laserIdx]->pos) +
-                        *EnemyEclInstr::GetVarFloat(enemy, &instruction->args.laserOp.arg1.x, NULL);
+                        *EnemyEclInstr::GetVarFloat(enemy, &instruction->args.laserOp.arg1[0], NULL);
                 }
                 break;
             case ECL_OPCODE_LASEROFFSET:
                 if (enemy->lasers[instruction->args.laserOp.laserIdx] != NULL)
                 {
                     enemy->lasers[instruction->args.laserOp.laserIdx]->pos =
-                        enemy->position + *instruction->args.laserOp.arg1.AsD3dXVec();
+                        enemy->position + instruction->args.laserOp.arg1;
                 }
                 break;
             case ECL_OPCODE_LASERTEST:
@@ -546,7 +546,7 @@ ZunResult EclManager::RunEcl(Enemy *enemy)
                 local_6c = &instruction->args.spellcardEffect;
                 enemy->effectArray[enemy->effectIdx] = g_EffectManager.SpawnParticles(
                     0xd, &enemy->position, 1, (ZunColor)g_EffectsColor[local_6c->effectColorId]);
-                enemy->effectArray[enemy->effectIdx]->pos2 = *local_6c->pos.AsD3dXVec();
+                enemy->effectArray[enemy->effectIdx]->pos2 = local_6c->pos;
                 enemy->effectDistance = local_6c->effectDistance;
                 enemy->effectIdx++;
                 break;
@@ -603,10 +603,8 @@ ZunResult EclManager::RunEcl(Enemy *enemy)
                 enemy->flags.unk2 = 4;
                 break;
             case ECL_OPCODE_MOVEBOUNDSSET:
-                enemy->lowerMoveLimit.x = instruction->args.moveBoundSet.lowerMoveLimit.x;
-                enemy->lowerMoveLimit.y = instruction->args.moveBoundSet.lowerMoveLimit.y;
-                enemy->upperMoveLimit.x = instruction->args.moveBoundSet.upperMoveLimit.x;
-                enemy->upperMoveLimit.y = instruction->args.moveBoundSet.upperMoveLimit.y;
+                enemy->lowerMoveLimit = zVec2(instruction->args.moveBoundSet.lowerMoveLimit);
+                enemy->upperMoveLimit = zVec2(instruction->args.moveBoundSet.upperMoveLimit);
                 enemy->flags.shouldClampPos = 1;
                 break;
             case ECL_OPCODE_MOVEBOUNDSDISABLE:
@@ -659,9 +657,7 @@ ZunResult EclManager::RunEcl(Enemy *enemy)
                 enemy->anmExFlags = 0xff;
                 break;
             case ECL_OPCODE_ENEMYSETHITBOX:
-                enemy->hitboxDimensions.x = instruction->args.move.pos.x;
-                enemy->hitboxDimensions.y = instruction->args.move.pos.y;
-                enemy->hitboxDimensions.z = instruction->args.move.pos.z;
+                enemy->hitboxDimensions = zVec3(instruction->args.move.pos);
                 break;
             case ECL_OPCODE_ENEMYFLAGCOLLISION:
                 enemy->flags.unk7 = instruction->args.setInt;
@@ -848,10 +844,11 @@ ZunResult EclManager::RunEcl(Enemy *enemy)
                 break;
             case ECL_OPCODE_ENEMYCREATE:
                 local_b0 = instruction->args.enemyCreate;
-                local_b0.pos.x = *EnemyEclInstr::GetVarFloat(enemy, &local_b0.pos.x, NULL);
-                local_b0.pos.y = *EnemyEclInstr::GetVarFloat(enemy, &local_b0.pos.y, NULL);
-                local_b0.pos.z = *EnemyEclInstr::GetVarFloat(enemy, &local_b0.pos.z, NULL);
-                g_EnemyManager.SpawnEnemy(local_b0.subId, local_b0.pos.AsD3dXVec(), local_b0.life, local_b0.itemDrop,
+                local_b0.pos[0] = *EnemyEclInstr::GetVarFloat(enemy, &local_b0.pos[0], NULL);
+                local_b0.pos[1] = *EnemyEclInstr::GetVarFloat(enemy, &local_b0.pos[1], NULL);
+                local_b0.pos[2] = *EnemyEclInstr::GetVarFloat(enemy, &local_b0.pos[2], NULL);
+                // TODO
+                g_EnemyManager.SpawnEnemy(local_b0.subId, &zVec3(local_b0.pos), local_b0.life, local_b0.itemDrop,
                                           local_b0.score);
                 break;
             case ECL_OPCODE_ENEMYKILLALL:
@@ -964,7 +961,7 @@ ZunResult EclManager::RunEcl(Enemy *enemy)
                 {
                     enemy->flags.unk1 = 0;
                     enemy->position = enemy->moveInterpStartPos + enemy->moveInterp;
-                    enemy->axisSpeed = zD3DXVECTOR3(0.0f, 0.0f, 0.0f);
+                    enemy->axisSpeed = zVec3(0.0f, 0.0f, 0.0f);
                 }
                 break;
             }

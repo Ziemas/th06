@@ -1,220 +1,158 @@
 /**
-*     Copyright (C) 2008-2014  Francesco Banterle
-*
-*     This Source Code Form is subject to the terms of the Mozilla Public
-*     License, v. 2.0. If a copy of the MPL was not distributed with this
-*     file, You can obtain one at http://mozilla.org/MPL/2.0/.
-**/
+ *     Copyright (C) 2008-2014  Francesco Banterle
+ *
+ *     This Source Code Form is subject to the terms of the Mozilla Public
+ *     License, v. 2.0. If a copy of the MPL was not distributed with this
+ *     file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ **/
 
 #ifndef D3DXVECTOR3_HPP
 #define D3DXVECTOR3_HPP
 
-/**
- * @brief The D3DXVECTOR3 class
- */
-class zD3DXVECTOR3
+class zVec3
 {
-public:
+  public:
     float x, y, z;
 
-    /**
-     * @brief D3DXVECTOR3
-     */
-    zD3DXVECTOR3()
+    zVec3()
     {
-	}
+    }
 
-    /**
-     * @brief D3DXVECTOR3
-     * @param a
-     */
-    zD3DXVECTOR3(float a)
+    zVec3(const float *a)
     {
-		this->x = a;
-		this->y = a;
-		this->z = a;
-	}
+        this->x = a[0];
+        this->y = a[1];
+        this->z = a[2];
+    }
 
-    /**
-     * @brief D3DXVECTOR3
-     * @param x
-     * @param y
-     * @param z
-     */
-    zD3DXVECTOR3(float x, float y, float z)
+    zVec3(float a)
     {
-		this->x = x;
-		this->y = y;
-		this->z = z;
-	}
+        this->x = a;
+        this->y = a;
+        this->z = a;
+    }
 
-    /**
-     * @brief operator -
-     * @param v
-     * @return
-     */
-    zD3DXVECTOR3 operator -(const zD3DXVECTOR3 &v) const
+    zVec3(float x, float y, float z)
     {
-        return zD3DXVECTOR3(x - v.x, y - v.y, z - v.z);
-	}
+        this->x = x;
+        this->y = y;
+        this->z = z;
+    }
 
-    /**
-     * @brief operator -
-     * @return
-     */
-    zD3DXVECTOR3 operator -()const
+    zVec3 operator-(const zVec3 &v) const
     {
-		return zD3DXVECTOR3(-x, -y, -z);
-	}
+        return zVec3(x - v.x, y - v.y, z - v.z);
+    }
 
-    /**
-     * @brief operator -=
-     * @param v
-     */
-    void operator -=(const zD3DXVECTOR3 &v)
+    zVec3 operator-() const
     {
-		x -= v.x;
-		y -= v.y;
-		z -= v.z;
-	}
+        return zVec3(-x, -y, -z);
+    }
 
-    /**
-     * @brief operator +
-     * @param v
-     * @return
-     */
-    zD3DXVECTOR3 operator +(const zD3DXVECTOR3 &v) const
+    void operator-=(const zVec3 &v)
     {
-        return zD3DXVECTOR3(x + v.x, y + v.y, z + v.z);
-	}
+        x -= v.x;
+        y -= v.y;
+        z -= v.z;
+    }
 
-    /**
-     * @brief operator +=
-     * @param v
-     */
-    void operator +=(const zD3DXVECTOR3 &v)
+    zVec3 operator+(const zVec3 &v) const
     {
-		x += v.x;
-		y += v.y;
-		z += v.z;
-	}
+        return zVec3(x + v.x, y + v.y, z + v.z);
+    }
 
-    /**
-     * @brief operator /
-     * @param v
-     * @return
-     */
-    zD3DXVECTOR3 operator /(const zD3DXVECTOR3 &v) const
+    void operator+=(const zVec3 &v)
     {
-		return zD3DXVECTOR3(x/v.x, y/v.y, z/v.z);
-	}
+        x += v.x;
+        y += v.y;
+        z += v.z;
+    }
 
-    void operator /=(const zD3DXVECTOR3 &v)
+    zVec3 operator/(const zVec3 &v) const
     {
-		x /= v.x;
-		y /= v.y;
-		z /= v.z;
-	}
+        return zVec3(x / v.x, y / v.y, z / v.z);
+    }
 
-    /**
-     * @brief operator *
-     * @param v
-     * @return
-     */
-    zD3DXVECTOR3 operator *(const zD3DXVECTOR3 &v)const
+    void operator/=(const zVec3 &v)
     {
-		return zD3DXVECTOR3(x*v.x,y*v.y,z*v.z);
-	}
+        x /= v.x;
+        y /= v.y;
+        z /= v.z;
+    }
 
-    /**
-     * @brief operator *
-     * @param a
-     * @return
-     */
-    zD3DXVECTOR3 operator *(const float &a) const
+    zVec3 operator*(const zVec3 &v) const
     {
-		return zD3DXVECTOR3(x*a, y*a, z*a);
-	}
+        return zVec3(x * v.x, y * v.y, z * v.z);
+    }
 
-    /**
-     * @brief operator *=
-     * @param a
-     */
-    void operator *=(const float &a)
+    zVec3 operator*(const float &a) const
     {
-		x *= a;
-		y *= a;
-		z *= a;
-	}
+        return zVec3(x * a, y * a, z * a);
+    }
 
-    /**
-     * @brief operator /
-     * @param a
-     * @return
-     */
-    zD3DXVECTOR3 operator /(const float &a)const
+    void operator*=(const float &a)
     {
-        if(a != 0.0f)
-            return zD3DXVECTOR3(x / a, y / a, z / a);
-		else
-			return zD3DXVECTOR3(x,y,z);
-	}
+        x *= a;
+        y *= a;
+        z *= a;
+    }
 
-    /**
-     * @brief operator /=
-     * @param a
-     */
-    void operator /=(const float &a)
+    zVec3 operator/(const float &a) const
     {
-        if(a != 0.0f){
-			x /= a;
-			y /= a;
-			z /= a;
-		}
-	}
+        if (a != 0.0f)
+            return zVec3(x / a, y / a, z / a);
+        else
+            return zVec3(x, y, z);
+    }
 
-    /**
-     * @brief operator []
-     * @param i
-     * @return
-     */
-    float operator [](int i) const
+    void operator/=(const float &a)
     {
-		switch(i){
-			case 0:
-				return x; break;
-			case 1:
-				return y; break;
-			case 2:
-				return z; break;
-		}
-		return -1.0f;
-	}
+        if (a != 0.0f)
+        {
+            x /= a;
+            y /= a;
+            z /= a;
+        }
+    }
 
-    /**
-     * @brief operator []
-     * @param i
-     * @return
-     */
-    float &operator [](int i)
+    float operator[](int i) const
     {
-		switch(i){
-			case 0:
-				return x; break;
-			case 1:
-				return y; break;
-			case 2:
-				return z; break;
-		}
-		return x;
-	}
+        switch (i)
+        {
+        case 0:
+            return x;
+            break;
+        case 1:
+            return y;
+            break;
+        case 2:
+            return z;
+            break;
+        }
+        return -1.0f;
+    }
+
+    float &operator[](int i)
+    {
+        switch (i)
+        {
+        case 0:
+            return x;
+            break;
+        case 1:
+            return y;
+            break;
+        case 2:
+            return z;
+            break;
+        }
+        return x;
+    }
 };
 
-static zD3DXVECTOR3 operator * (float f, const zD3DXVECTOR3 &v)
+static zVec3 operator*(float f, const zVec3 &v)
 {
-    return zD3DXVECTOR3(f*v.x, f*v.y, f*v.z);
+    return zVec3(f * v.x, f * v.y, f * v.z);
 }
 
-
-
-#endif //D3DXVECTOR3_HPP
+#endif // D3DXVECTOR3_HPP

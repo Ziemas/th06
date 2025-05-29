@@ -15,12 +15,12 @@ namespace th06
 struct AnmLoadedSprite
 {
     i32 sourceFileIndex;
-    ZunVec2 startPixelInclusive;
-    ZunVec2 endPixelInclusive;
+    zVec2 startPixelInclusive;
+    zVec2 endPixelInclusive;
     f32 textureHeight;
     f32 textureWidth;
-    ZunVec2 uvStart;
-    ZunVec2 uvEnd;
+    zVec2 uvStart;
+    zVec2 uvEnd;
     f32 heightPx;
     f32 widthPx;
     i32 spriteId;
@@ -147,7 +147,7 @@ struct AnmVm
         this->scaleInterpEndTime = 0;
         this->alphaInterpEndTime = 0;
         this->color = COLOR_WHITE;
-        zD3DXMatrixIdentity(&this->matrix);
+        zMatrixIdentity(&this->matrix);
         this->flags.flags = AnmVmFlags_0 | AnmVmFlags_1;
         this->autoRotate = 0;
         this->pendingInterrupt = 0;
@@ -165,15 +165,15 @@ struct AnmVm
         this->flags.isVisible = 0;
     }
 
-    zD3DXVECTOR3 rotation;
-    zD3DXVECTOR3 angleVel;
+    zVec3 rotation;
+    zVec3 angleVel;
     f32 scaleY;
     f32 scaleX;
     f32 scaleInterpFinalY;
     f32 scaleInterpFinalX;
-    zD3DXVECTOR2 uvScrollPos;
+    zVec2 uvScrollPos;
     ZunTimer currentTimeInScript;
-    zD3DXMATRIX matrix;
+    zMatrix matrix;
     ZunColor color;
     AnmVmFlags flags;
 
@@ -183,7 +183,7 @@ struct AnmVm
     i16 pendingInterrupt;
     i16 posInterpEndTime;
     // Two padding bytes
-    zD3DXVECTOR3 pos;
+    zVec3 pos;
     f32 scaleInterpInitialY;
     f32 scaleInterpInitialX;
     ZunTimer scaleInterpTime;
@@ -196,9 +196,9 @@ struct AnmVm
     AnmLoadedSprite *sprite;
     ZunColor alphaInterpInitial;
     ZunColor alphaInterpFinal;
-    zD3DXVECTOR3 posInterpInitial;
-    zD3DXVECTOR3 posInterpFinal;
-    zD3DXVECTOR3 posOffset;
+    zVec3 posInterpInitial;
+    zVec3 posInterpFinal;
+    zVec3 posOffset;
     ZunTimer posInterpTime;
     i32 timeOfLastSpriteSet;
     ZunTimer alphaInterpTime;

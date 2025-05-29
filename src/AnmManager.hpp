@@ -17,38 +17,38 @@ namespace th06
 // structure of a vertex with SetVertexShade FVF set to D3DFVF_DIFFUSE | D3DFVF_XYZRHW
 struct VertexDiffuseXyzrwh
 {
-    zD3DXVECTOR4 position;
+    zVec4 position;
     D3DCOLOR diffuse;
 };
 
 // Structure of a vertex with SetVertexShade FVF set to D3DFVF_TEX1 | D3DFVF_XYZRHW
 struct VertexTex1Xyzrwh
 {
-    zD3DXVECTOR4 position;
-    zD3DXVECTOR2 textureUV;
+    zVec4 position;
+    zVec2 textureUV;
 };
 
 // Structure of a vertex with SetVertexShade FVF set to D3DFVF_TEX1 | D3DFVF_DIFFUSE | D3DFVF_XYZRHW
 struct VertexTex1DiffuseXyzrwh
 {
-    zD3DXVECTOR4 position;
+    zVec4 position;
     D3DCOLOR diffuse;
-    zD3DXVECTOR2 textureUV;
+    zVec2 textureUV;
 };
 
 // Structure of a vertex with SetVertexShade FVF set to D3DFVF_TEX1 | D3DFVF_DIFFUSE | D3DFVF_XYZ
 struct VertexTex1DiffuseXyz
 {
-    zD3DXVECTOR3 position;
+    zVec3 position;
     D3DCOLOR diffuse;
-    zD3DXVECTOR2 textureUV;
+    zVec2 textureUV;
 };
 
 struct AnmRawSprite
 {
     u32 id;
-    zD3DXVECTOR2 offset;
-    zD3DXVECTOR2 size;
+    zVec2 offset;
+    zVec2 size;
 };
 
 struct AnmRawScript
@@ -82,8 +82,8 @@ ZUN_ASSERT_SIZE(AnmRawEntry, 0xb8);
 
 struct RenderVertexInfo
 {
-    zD3DXVECTOR3 position;
-    zD3DXVECTOR2 textureUV;
+    zVec3 position;
+    zVec2 textureUV;
 };
 ZUN_ASSERT_SIZE(RenderVertexInfo, 0x14);
 
@@ -170,8 +170,8 @@ struct AnmManager
     void AnmManager::ExecuteAnmIdx(AnmVm *vm, i32 anmFileIdx)
     {
         vm->anmFileIndex = anmFileIdx;
-        vm->pos = zD3DXVECTOR3(0, 0, 0);
-        vm->posOffset = zD3DXVECTOR3(0, 0, 0);
+        vm->pos = zVec3(0, 0, 0);
+        vm->posOffset = zVec3(0, 0, 0);
         vm->fontHeight = 15;
         vm->fontWidth = 15;
 

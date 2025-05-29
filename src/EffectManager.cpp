@@ -93,14 +93,14 @@ i32 EffectManager::EffectCallbackStill(Effect *effect)
 #pragma var_order(posOffset, verticalAngle, local_54, horizontalAngle, normalizedPos, alpha)
 i32 EffectManager::EffectUpdateCallback4(Effect *effect)
 {
-    zD3DXVECTOR3 posOffset;
+    zVec3 posOffset;
     f32 verticalAngle;
-    zD3DXMATRIX local_54;
+    zMatrix local_54;
     f32 horizontalAngle;
-    zD3DXVECTOR3 normalizedPos;
+    zVec3 normalizedPos;
     f32 alpha;
 
-    zD3DXVec3Normalize(&normalizedPos, &effect->pos2);
+    zVec3Normalize(&normalizedPos, &effect->pos2);
 
     verticalAngle = sinf(effect->angleRelated);
     horizontalAngle = cosf(effect->angleRelated);
@@ -109,23 +109,23 @@ i32 EffectManager::EffectUpdateCallback4(Effect *effect)
     effect->quaternion.y = normalizedPos.y * verticalAngle;
     effect->quaternion.z = normalizedPos.z * verticalAngle;
     effect->quaternion.w = horizontalAngle;
-    zD3DXMatrixRotationQuaternion(&local_54, &effect->quaternion);
+    zMatrixRotationQuaternion(&local_54, &effect->quaternion);
 
     posOffset.x = normalizedPos.y * 1.0f - normalizedPos.z * 0.0f;
     posOffset.y = normalizedPos.z * 0.0f - normalizedPos.x * 1.0f;
     posOffset.z = normalizedPos.x * 0.0f - normalizedPos.y * 0.0f;
 
-    if (zD3DXVec3LengthSq(&posOffset) < 0)
+    if (zVec3LengthSq(&posOffset) < 0)
     {
-        normalizedPos = zD3DXVECTOR3(1.0f, 0.0f, 0.0f);
+        normalizedPos = zVec3(1.0f, 0.0f, 0.0f);
     }
     else
     {
-        zD3DXVec3Normalize(&posOffset, &posOffset);
+        zVec3Normalize(&posOffset, &posOffset);
     }
 
     posOffset *= effect->unk_15c;
-    zD3DXVec3TransformCoord(&posOffset, &posOffset, &local_54);
+    zVec3TransformCoord(&posOffset, &posOffset, &local_54);
     posOffset.z *= 6.0f;
 
     effect->pos1 = posOffset + effect->position;
@@ -192,7 +192,7 @@ i32 EffectManager::EffectCallbackAttractSlow(Effect *effect)
 }
 
 #pragma var_order(effect, idx)
-Effect *EffectManager::SpawnParticles(i32 effectIdx, zD3DXVECTOR3 *pos, i32 count, ZunColor color)
+Effect *EffectManager::SpawnParticles(i32 effectIdx, zVec3 *pos, i32 count, ZunColor color)
 {
     i32 idx;
     Effect *effect;

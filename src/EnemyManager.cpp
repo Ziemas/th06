@@ -46,8 +46,8 @@ void EnemyManager::Initialize()
     enemy->flags.unk6 = 1;
     enemy->flags.unk7 = 1;
     enemy->flags.unk8 = 0;
-    enemy->hitboxDimensions = zD3DXVECTOR3(12.0f, 12.0f, 12.0f);
-    enemy->axisSpeed = zD3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    enemy->hitboxDimensions = zVec3(12.0f, 12.0f, 12.0f);
+    enemy->axisSpeed = zVec3(0.0f, 0.0f, 0.0f);
     enemy->angularVelocity = 0.0f;
     enemy->angle = 0.0f;
     enemy->acceleration = 0.0f;
@@ -64,7 +64,7 @@ void EnemyManager::Initialize()
     enemy->deathAnm3 = 0;
     enemy->shootInterval = 0;
     enemy->shootIntervalTimer.InitializeForPopup();
-    enemy->shootOffset = zD3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    enemy->shootOffset = zVec3(0.0f, 0.0f, 0.0f);
     enemy->anmExLeft = -1;
     enemy->anmExRight = -1;
     enemy->anmExDefaults = -1;
@@ -88,7 +88,7 @@ EnemyManager::EnemyManager()
     this->Initialize();
 }
 
-Enemy *EnemyManager::SpawnEnemy(i32 eclSubId, zD3DXVECTOR3 *pos, i16 life, i16 itemDrop, i32 score)
+Enemy *EnemyManager::SpawnEnemy(i32 eclSubId, zVec3 *pos, i16 life, i16 itemDrop, i32 score)
 {
     Enemy *newEnemy;
     i32 idx;
@@ -142,10 +142,10 @@ void Enemy::ResetEffectArray(Enemy *enemy)
 #pragma var_order(spawnedEnemy, subrankIncreaseFrame, args1, args2, args3, pos1, pos2, args4, pos3, pos4)
 void EnemyManager::RunEclTimeline()
 {
-    zD3DXVECTOR3 pos4;
-    zD3DXVECTOR3 pos3;
-    zD3DXVECTOR3 pos2;
-    zD3DXVECTOR3 pos1;
+    zVec3 pos4;
+    zVec3 pos3;
+    zVec3 pos2;
+    zVec3 pos1;
     EclTimelineInstrArgs *args4;
     EclTimelineInstrArgs *args3;
     EclTimelineInstrArgs *args2;
@@ -522,7 +522,7 @@ ChainCallbackResult EnemyManager::OnUpdate(EnemyManager *mgr)
     Enemy *curEnemy;
     i32 enemyLifeBeforeDmg;
     i32 enemyVmIdx;
-    zD3DXVECTOR3 enemyHitbox;
+    zVec3 enemyHitbox;
     i32 enemyIdx;
     i32 damage;
     i32 local_8;

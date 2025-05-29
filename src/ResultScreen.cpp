@@ -1238,7 +1238,7 @@ u32 ResultScreen::DrawFinalStats()
 {
     f32 completion;
     f32 unknownFloat;
-    zD3DXVECTOR3 strPos;
+    zVec3 strPos;
     AnmVm *viewport;
     i32 color;
     f32 slowdownRate;
@@ -1459,7 +1459,7 @@ ChainCallbackResult ResultScreen::OnUpdate(ResultScreen *resultScreen)
                         vm->color = COLOR_WHITE;
                     }
 
-                    vm->posOffset = zD3DXVECTOR3(-4.0f, -4.0f, 0.0f);
+                    vm->posOffset = zVec3(-4.0f, -4.0f, 0.0f);
                 }
                 else
                 {
@@ -1471,7 +1471,7 @@ ChainCallbackResult ResultScreen::OnUpdate(ResultScreen *resultScreen)
                     {
                         vm->color = COLOR_SET_ALPHA(COLOR_WHITE, 176);
                     }
-                    vm->posOffset = zD3DXVECTOR3(0.0f, 0.0f, 0.0f);
+                    vm->posOffset = zVec3(0.0f, 0.0f, 0.0f);
                 }
             }
         }
@@ -1501,7 +1501,7 @@ ChainCallbackResult ResultScreen::OnUpdate(ResultScreen *resultScreen)
                 {
                     vm->color = COLOR_WHITE;
                 }
-                vm->posOffset = zD3DXVECTOR3(-4.0f, -4.0f, 0.0f);
+                vm->posOffset = zVec3(-4.0f, -4.0f, 0.0f);
             }
             else
             {
@@ -1513,7 +1513,7 @@ ChainCallbackResult ResultScreen::OnUpdate(ResultScreen *resultScreen)
                 {
                     vm->color = COLOR_SET_ALPHA(COLOR_WHITE, 176);
                 }
-                vm->posOffset = zD3DXVECTOR3(0.0f, 0.0f, 0.0f);
+                vm->posOffset = zVec3(0.0f, 0.0f, 0.0f);
             }
         }
 
@@ -1774,10 +1774,10 @@ ChainCallbackResult th06::ResultScreen::OnDraw(ResultScreen *resultScreen)
     AnmVm *sprite;
     char keyboardCharacter;
     u8 unk;
-    ZunVec2 charPos;
+    zVec2 charPos;
 
     i32 spellcardIdx;
-    ZunVec3 spritePos;
+    zVec3 spritePos;
     ScoreListNode *ShootScoreListNodeB;
     i32 column;
     i32 row;
@@ -1785,7 +1785,7 @@ ChainCallbackResult th06::ResultScreen::OnDraw(ResultScreen *resultScreen)
 
     char name[9];
 
-    zD3DXVECTOR3 strPos;
+    zVec3 strPos;
 
     sprite = &resultScreen->unk_40[0];
     g_Supervisor.viewport.X = 0;
@@ -1798,28 +1798,28 @@ ChainCallbackResult th06::ResultScreen::OnDraw(ResultScreen *resultScreen)
 
     for (row = 0; row < ARRAY_SIZE_SIGNED(resultScreen->unk_40); row++, sprite++)
     {
-        *spritePos.AsD3dXVec() = sprite->pos;
+        spritePos = sprite->pos;
         sprite->pos += sprite->posOffset;
         g_AnmManager->DrawNoRotation(sprite);
-        sprite->pos = *spritePos.AsD3dXVec();
+        sprite->pos = spritePos;
     }
     sprite = &resultScreen->unk_40[14];
     if (sprite->pos.x < 640.0f)
     {
         if (resultScreen->lastResultScreenState != 8)
         {
-            *spritePos.AsD3dXVec() = sprite->pos;
-            resultScreen->unk_28a0->pos = *spritePos.AsD3dXVec();
+            spritePos = sprite->pos;
+            resultScreen->unk_28a0->pos = spritePos;
             g_AnmManager->DrawNoRotation(&resultScreen->unk_28a0[0]);
 
-            spritePos.AsD3dXVec()->x += 320.0f;
+            spritePos.x += 320.0f;
 
-            resultScreen->unk_28a0[1].pos = *spritePos.AsD3dXVec();
+            resultScreen->unk_28a0[1].pos = spritePos;
             g_AnmManager->DrawNoRotation(&resultScreen->unk_28a0[1]);
 
-            spritePos.AsD3dXVec()->x -= -320.0f;
-            spritePos.AsD3dXVec()->y += 18.0f;
-            spritePos.AsD3dXVec()->y += 320.0f;
+            spritePos.x -= -320.0f;
+            spritePos.y += 18.0f;
+            spritePos.y += 320.0f;
 
             ShootScoreListNodeA = resultScreen->scores[resultScreen->diffSelected][resultScreen->charUsed * 2].next;
             ShootScoreListNodeB = resultScreen->scores[resultScreen->diffSelected][resultScreen->charUsed * 2 + 1].next;
@@ -1837,7 +1837,7 @@ ChainCallbackResult th06::ResultScreen::OnDraw(ResultScreen *resultScreen)
                             name[8] = 0;
 
                             name[resultScreen->cursor >= 8 ? 7 : resultScreen->cursor] = '_';
-                            g_AsciiManager.AddFormatText(spritePos.AsD3dXVec(), "   %8s", &name);
+                            g_AsciiManager.AddFormatText(&spritePos, "   %8s", &name);
                         }
                         else
                         {
@@ -1853,25 +1853,25 @@ ChainCallbackResult th06::ResultScreen::OnDraw(ResultScreen *resultScreen)
                 {
                     g_AsciiManager.color = 0xffffc0c0;
                 }
-                g_AsciiManager.AddFormatText(spritePos.AsD3dXVec(), "%2d", row + 1);
+                g_AsciiManager.AddFormatText(&spritePos, "%2d", row + 1);
 
                 spritePos.x += 36.0f;
                 if (ShootScoreListNodeA->data->stage <= 6)
                 {
-                    g_AsciiManager.AddFormatText(spritePos.AsD3dXVec(), "%8s %9d(%d)", ShootScoreListNodeA->data->name,
+                    g_AsciiManager.AddFormatText(&spritePos, "%8s %9d(%d)", ShootScoreListNodeA->data->name,
                                                  ShootScoreListNodeA->data->score, ShootScoreListNodeA->data->stage);
                 }
                 else if (ShootScoreListNodeA->data->stage == 7)
                 {
-                    g_AsciiManager.AddFormatText(spritePos.AsD3dXVec(), "%8s %9d(1)", ShootScoreListNodeA->data->name,
+                    g_AsciiManager.AddFormatText(&spritePos, "%8s %9d(1)", ShootScoreListNodeA->data->name,
                                                  ShootScoreListNodeA->data->score);
                 }
                 else
                 {
-                    g_AsciiManager.AddFormatText(spritePos.AsD3dXVec(), "%8s %9d(C)", ShootScoreListNodeA->data->name,
+                    g_AsciiManager.AddFormatText(&spritePos, "%8s %9d(C)", ShootScoreListNodeA->data->name,
                                                  ShootScoreListNodeA->data->score);
                 }
-                spritePos.AsD3dXVec()->x += 300.0f;
+                spritePos.x += 300.0f;
                 if (resultScreen->resultScreenState == RESULT_SCREEN_STATE_WRITING_HIGHSCORE_NAME)
                 {
                     if (g_GameManager.shotType == SHOT_TYPE_B)
@@ -1884,7 +1884,7 @@ ChainCallbackResult th06::ResultScreen::OnDraw(ResultScreen *resultScreen)
                             name[8] = 0;
 
                             name[resultScreen->cursor >= 8 ? 7 : resultScreen->cursor] = '_';
-                            g_AsciiManager.AddFormatText(spritePos.AsD3dXVec(), "%8s", &name);
+                            g_AsciiManager.AddFormatText(&spritePos, "%8s", &name);
                         }
                         else
                         {
@@ -1902,21 +1902,21 @@ ChainCallbackResult th06::ResultScreen::OnDraw(ResultScreen *resultScreen)
                 }
                 if (ShootScoreListNodeB->data->stage <= 6)
                 {
-                    g_AsciiManager.AddFormatText(spritePos.AsD3dXVec(), "%8s %9d(%d)", ShootScoreListNodeB->data->name,
+                    g_AsciiManager.AddFormatText(&spritePos, "%8s %9d(%d)", ShootScoreListNodeB->data->name,
                                                  ShootScoreListNodeB->data->score, ShootScoreListNodeB->data->stage);
                 }
                 else if (ShootScoreListNodeB->data->stage == 7)
                 {
-                    g_AsciiManager.AddFormatText(spritePos.AsD3dXVec(), "%8s %9d(1)", ShootScoreListNodeB->data->name,
+                    g_AsciiManager.AddFormatText(&spritePos, "%8s %9d(1)", ShootScoreListNodeB->data->name,
                                                  ShootScoreListNodeB->data->score);
                 }
                 else
                 {
-                    g_AsciiManager.AddFormatText(spritePos.AsD3dXVec(), "%8s %9d(C)", ShootScoreListNodeB->data->name,
+                    g_AsciiManager.AddFormatText(&spritePos, "%8s %9d(C)", ShootScoreListNodeB->data->name,
                                                  ShootScoreListNodeB->data->score);
                 }
-                spritePos.AsD3dXVec()->x -= 336.0f;
-                spritePos.AsD3dXVec()->y += 336.0f;
+                spritePos.x -= 336.0f;
+                spritePos.y += 336.0f;
                 ShootScoreListNodeA = ShootScoreListNodeA->next;
                 ShootScoreListNodeB = ShootScoreListNodeB->next;
             }
@@ -1924,8 +1924,8 @@ ChainCallbackResult th06::ResultScreen::OnDraw(ResultScreen *resultScreen)
         else
         {
 
-            *spritePos.AsD3dXVec() = sprite->pos;
-            spritePos.AsD3dXVec()->y += 16.0f;
+            spritePos = sprite->pos;
+            spritePos.y += 16.0f;
 
             for (row = 0; row < 10; row++)
             {
@@ -1935,7 +1935,7 @@ ChainCallbackResult th06::ResultScreen::OnDraw(ResultScreen *resultScreen)
                     break;
                 }
 
-                resultScreen->unk_28a0[row].pos = *spritePos.AsD3dXVec();
+                resultScreen->unk_28a0[row].pos = spritePos;
                 if (g_GameManager.catk[spellcardIdx].numAttempts == 0)
                 {
                     g_AsciiManager.color = 0x80c0c0ff;
@@ -1948,27 +1948,27 @@ ChainCallbackResult th06::ResultScreen::OnDraw(ResultScreen *resultScreen)
                 {
                     g_AsciiManager.color = 0xfff0f0ff - row * 0x80800;
                 }
-                g_AsciiManager.AddFormatText(spritePos.AsD3dXVec(), "No.%.2d", spellcardIdx + 1);
+                g_AsciiManager.AddFormatText(&spritePos, "No.%.2d", spellcardIdx + 1);
 
                 // TODO: This is really cursed, there has to be a better way
-                (*(ZunVec3 *)&resultScreen->unk_28a0[row].pos).AsD3dXVec()->x += 96.0f;
+                (*(zVec3 *)&resultScreen->unk_28a0[row].pos).x += 96.0f;
 
                 g_AnmManager->DrawNoRotation(&resultScreen->unk_28a0[row]);
 
-                spritePos.AsD3dXVec()->x += 368.0f;
+                spritePos.x += 368.0f;
 
-                g_AsciiManager.AddFormatText(spritePos.AsD3dXVec(), "%3d/%3d",
+                g_AsciiManager.AddFormatText(&spritePos, "%3d/%3d",
                                              g_GameManager.catk[spellcardIdx].numSuccess,
                                              g_GameManager.catk[spellcardIdx].numAttempts);
-                spritePos.AsD3dXVec()->x -= 368.0f;
-                spritePos.AsD3dXVec()->y += 30.0f;
+                spritePos.x -= 368.0f;
+                spritePos.y += 30.0f;
             }
         }
     }
     if (resultScreen->resultScreenState == RESULT_SCREEN_STATE_WRITING_HIGHSCORE_NAME ||
         resultScreen->resultScreenState == RESULT_SCREEN_STATE_WRITING_REPLAY_NAME)
     {
-        *spritePos.AsD3dXVec() = zD3DXVECTOR3(160.0f, 356.0f, 0.0f);
+        spritePos = zVec3(160.0f, 356.0f, 0.0f);
 
         for (row = 0; row < RESULT_KEYBOARD_ROWS; row++)
         {
@@ -1998,7 +1998,7 @@ ChainCallbackResult th06::ResultScreen::OnDraw(ResultScreen *resultScreen)
                     g_AsciiManager.scale.x = 1.0f;
                     g_AsciiManager.scale.y = 1.0f;
                 }
-                strPos = *spritePos.AsD3dXVec();
+                strPos = spritePos;
                 strPos.x += charPos.y;
                 strPos.y += charPos.x;
                 keyboardCharacter = g_AlphabetList[row * RESULT_KEYBOARD_COLUMNS + column];
@@ -2018,10 +2018,10 @@ ChainCallbackResult th06::ResultScreen::OnDraw(ResultScreen *resultScreen)
 
                 g_AsciiManager.AddString(&strPos, &keyboardCharacter);
 
-                spritePos.AsD3dXVec()->x += 20.0f;
+                spritePos.x += 20.0f;
             }
-            spritePos.AsD3dXVec()->x -= column * 20;
-            spritePos.AsD3dXVec()->y += 18.0f;
+            spritePos.x -= column * 20;
+            spritePos.y += 18.0f;
         }
     }
     g_AsciiManager.scale.x = 1.0;
@@ -2035,12 +2035,12 @@ ChainCallbackResult th06::ResultScreen::OnDraw(ResultScreen *resultScreen)
             g_AnmManager->DrawNoRotation(sprite);
         }
         sprite = &resultScreen->unk_40[21];
-        *spritePos.AsD3dXVec() = sprite->pos;
+        spritePos = sprite->pos;
         sprite++;
-        g_AsciiManager.AddFormatText(spritePos.AsD3dXVec(), "No.   Name     Date     Player Score");
+        g_AsciiManager.AddFormatText(&spritePos, "No.   Name     Date     Player Score");
         for (row = 0; row < ARRAY_SIZE_SIGNED(resultScreen->replays); row++)
         {
-            *spritePos.AsD3dXVec() = sprite->pos;
+            spritePos = sprite->pos;
             sprite++;
             if (row == resultScreen->replayNumber)
             {
@@ -2052,7 +2052,7 @@ ChainCallbackResult th06::ResultScreen::OnDraw(ResultScreen *resultScreen)
             }
             if (resultScreen->resultScreenState == RESULT_SCREEN_STATE_WRITING_REPLAY_NAME)
             {
-                g_AsciiManager.AddFormatText(spritePos.AsD3dXVec(), "No.%.2d %8s %8s %7s %9d", row + 1,
+                g_AsciiManager.AddFormatText(&spritePos, "No.%.2d %8s %8s %7s %9d", row + 1,
                                              &resultScreen->replayName, resultScreen->defaultReplay.date,
                                              g_ShortCharacterList2[g_GameManager.CharacterShotType()],
                                              resultScreen->defaultReplay.score);
@@ -2063,17 +2063,17 @@ ChainCallbackResult th06::ResultScreen::OnDraw(ResultScreen *resultScreen)
                 name[8] = 0;
 
                 name[resultScreen->cursor >= 8 ? 7 : resultScreen->cursor] = '_';
-                g_AsciiManager.AddFormatText(spritePos.AsD3dXVec(), "      %8s", &name);
+                g_AsciiManager.AddFormatText(&spritePos, "      %8s", &name);
             }
             else if (*(i32 *)&resultScreen->replays[row].magic != *(i32 *)"T6RP" ||
                      resultScreen->replays[row].version != GAME_VERSION)
             {
-                g_AsciiManager.AddFormatText(spritePos.AsD3dXVec(), "No.%.2d -------- --/--/-- -------         0",
+                g_AsciiManager.AddFormatText(&spritePos, "No.%.2d -------- --/--/-- -------         0",
                                              row + 1);
             }
             else
             {
-                g_AsciiManager.AddFormatText(spritePos.AsD3dXVec(), "No.%.2d %8s %8s %7s %9d", row + 1,
+                g_AsciiManager.AddFormatText(&spritePos, "No.%.2d %8s %8s %7s %9d", row + 1,
                                              resultScreen->replays[row].name, resultScreen->replays[row].date,
                                              g_ShortCharacterList2[resultScreen->replays[row].shottypeChara],
                                              resultScreen->replays[row].score);
@@ -2130,8 +2130,8 @@ ZunResult ResultScreen::AddedCallback(ResultScreen *resultScreen)
         for (i = 0; i < ARRAY_SIZE_SIGNED(resultScreen->unk_40); i++, sprite++)
         {
 
-            sprite->pos = zD3DXVECTOR3(0.0f, 0.0f, 0.0f);
-            sprite->posOffset = zD3DXVECTOR3(0.0f, 0.0f, 0.0f);
+            sprite->pos = zVec3(0.0f, 0.0f, 0.0f);
+            sprite->posOffset = zVec3(0.0f, 0.0f, 0.0f);
 
             // Execute all the scripts from the start of result00 to the end of result02
             g_AnmManager->SetAndExecuteScriptIdx(sprite, ANM_SCRIPT_RESULT00_START + i);
@@ -2142,7 +2142,7 @@ ZunResult ResultScreen::AddedCallback(ResultScreen *resultScreen)
         {
             g_AnmManager->InitializeAndSetSprite(sprite, ANM_SCRIPT_TEXT_RESULTSCREEN_CHARACTER_NAME + i);
 
-            sprite->pos = zD3DXVECTOR3(0.0f, 0.0f, 0.0f);
+            sprite->pos = zVec3(0.0f, 0.0f, 0.0f);
 
             sprite->flags.anchor = AnmVmAnchor_TopLeft;
 

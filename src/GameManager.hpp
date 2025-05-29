@@ -122,12 +122,12 @@ struct GameManager
     u32 gameFrames;
     i32 currentStage;
     u32 menuCursorBackup;
-    zD3DXVECTOR2 arcadeRegionTopLeftPos;
-    zD3DXVECTOR2 arcadeRegionSize;
-    zD3DXVECTOR2 playerMovementAreaTopLeftPos;
-    zD3DXVECTOR2 playerMovementAreaSize;
+    zVec2 arcadeRegionTopLeftPos;
+    zVec2 arcadeRegionSize;
+    zVec2 playerMovementAreaTopLeftPos;
+    zVec2 playerMovementAreaSize;
     f32 cameraDistance;
-    zD3DXVECTOR3 stageCameraFacingDir;
+    zVec3 stageCameraFacingDir;
     i32 counat;
     i32 rank;
     i32 maxRank;

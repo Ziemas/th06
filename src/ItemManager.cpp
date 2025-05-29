@@ -18,7 +18,7 @@ ItemManager::ItemManager() {
 
 };
 
-void ItemManager::SpawnItem(zD3DXVECTOR3 *position, ItemType itemType, int state)
+void ItemManager::SpawnItem(zVec3 *position, ItemType itemType, int state)
 {
     Item *item;
     i32 idx;
@@ -97,7 +97,7 @@ void ItemManager::OnUpdate()
     i32 itemAcquired;
 
     curItem = &this->items[0];
-    static zD3DXVECTOR3 g_ItemSize(16.0f, 16.0f, 16.0f);
+    static zVec3 g_ItemSize(16.0f, 16.0f, 16.0f);
     itemAcquired = false;
     this->itemCount = 0;
     for (idx = 0; idx < ARRAY_SIZE_SIGNED(this->items); idx++, curItem++)
@@ -117,7 +117,7 @@ void ItemManager::OnUpdate()
             }
             else if ((i32)(curItem->timer.current == 60))
             {
-                curItem->startPosition = zD3DXVECTOR3(0.0f, 0.0f, 0.0f);
+                curItem->startPosition = zVec3(0.0f, 0.0f, 0.0f);
             }
         }
         else

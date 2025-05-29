@@ -498,7 +498,7 @@ ZunResult AnmManager::SetActiveSprite(AnmVm *vm, u32 sprite_index)
 
     vm->activeSpriteIndex = (i16)sprite_index;
     vm->sprite = this->sprites + sprite_index;
-    zD3DXMatrixIdentity(&vm->matrix);
+    zMatrixIdentity(&vm->matrix);
     vm->matrix.m[0][0] = vm->sprite->widthPx / vm->sprite->textureWidth;
     vm->matrix.m[1][1] = vm->sprite->heightPx / vm->sprite->textureHeight;
 
@@ -841,9 +841,9 @@ ZunResult AnmManager::DrawFacingCamera(AnmVm *vm)
 #pragma var_order(textureMatrix, rotationMatrix, worldTransformMatrix, scaledXCenter, scaledYCenter)
 ZunResult AnmManager::Draw3(AnmVm *vm)
 {
-    zD3DXMATRIX worldTransformMatrix;
-    zD3DXMATRIX rotationMatrix;
-    zD3DXMATRIX textureMatrix;
+    zMatrix worldTransformMatrix;
+    zMatrix rotationMatrix;
+    zMatrix textureMatrix;
     f32 scaledXCenter;
     f32 scaledYCenter;
 
@@ -866,20 +866,20 @@ ZunResult AnmManager::Draw3(AnmVm *vm)
 
     if (vm->rotation.x != 0.0)
     {
-        zD3DXMatrixRotationX(&rotationMatrix, vm->rotation.x);
-        zD3DXMatrixMultiply(&worldTransformMatrix, &worldTransformMatrix, &rotationMatrix);
+        zMatrixRotationX(&rotationMatrix, vm->rotation.x);
+        zMatrixMultiply(&worldTransformMatrix, &worldTransformMatrix, &rotationMatrix);
     }
 
     if (vm->rotation.y != 0.0)
     {
-        zD3DXMatrixRotationY(&rotationMatrix, vm->rotation.y);
-        zD3DXMatrixMultiply(&worldTransformMatrix, &worldTransformMatrix, &rotationMatrix);
+        zMatrixRotationY(&rotationMatrix, vm->rotation.y);
+        zMatrixMultiply(&worldTransformMatrix, &worldTransformMatrix, &rotationMatrix);
     }
 
     if (vm->rotation.z != 0.0)
     {
-        zD3DXMatrixRotationZ(&rotationMatrix, vm->rotation.z);
-        zD3DXMatrixMultiply(&worldTransformMatrix, &worldTransformMatrix, &rotationMatrix);
+        zMatrixRotationZ(&rotationMatrix, vm->rotation.z);
+        zMatrixMultiply(&worldTransformMatrix, &worldTransformMatrix, &rotationMatrix);
     }
 
     if ((vm->flags.anchor & AnmVmAnchor_Left) == 0)
@@ -955,9 +955,9 @@ ZunResult AnmManager::Draw3(AnmVm *vm)
 #pragma var_order(textureMatrix, unusedMatrix, worldTransformMatrix)
 ZunResult AnmManager::Draw2(AnmVm *vm)
 {
-    zD3DXMATRIX worldTransformMatrix;
-    zD3DXMATRIX unusedMatrix;
-    zD3DXMATRIX textureMatrix;
+    zMatrix worldTransformMatrix;
+    zMatrix unusedMatrix;
+    zMatrix textureMatrix;
 
     if (!vm->flags.isVisible)
     {
@@ -1151,12 +1151,12 @@ i32 AnmManager::ExecuteScript(AnmVm *vm)
             if (vm->flags.flag5 == 0)
             {
                 vm->pos =
-                    zD3DXVECTOR3(*(f32 *)&curInstr->args[0], *(f32 *)&curInstr->args[1], *(f32 *)&curInstr->args[2]);
+                    zVec3(*(f32 *)&curInstr->args[0], *(f32 *)&curInstr->args[1], *(f32 *)&curInstr->args[2]);
             }
             else
             {
                 vm->posOffset =
-                    zD3DXVECTOR3(*(f32 *)&curInstr->args[0], *(f32 *)&curInstr->args[1], *(f32 *)&curInstr->args[2]);
+                    zVec3(*(f32 *)&curInstr->args[0], *(f32 *)&curInstr->args[1], *(f32 *)&curInstr->args[2]);
             }
             break;
         case AnmOpcode_PosTimeAccel:
@@ -1170,14 +1170,14 @@ i32 AnmManager::ExecuteScript(AnmVm *vm)
         PosTimeDoStuff:
             if (vm->flags.flag5 == 0)
             {
-                memcpy(&vm->posInterpInitial, &vm->pos, sizeof(zD3DXVECTOR3));
+                memcpy(&vm->posInterpInitial, &vm->pos, sizeof(zVec3));
             }
             else
             {
-                memcpy(&vm->posInterpInitial, &vm->posOffset, sizeof(zD3DXVECTOR3));
+                memcpy(&vm->posInterpInitial, &vm->posOffset, sizeof(zVec3));
             }
             vm->posInterpFinal =
-                zD3DXVECTOR3(*(f32 *)&curInstr->args[0], *(f32 *)&curInstr->args[1], *(f32 *)&curInstr->args[2]);
+                zVec3(*(f32 *)&curInstr->args[0], *(f32 *)&curInstr->args[1], *(f32 *)&curInstr->args[2]);
             vm->posInterpEndTime = curInstr->args[3];
             vm->posInterpTime.InitializeForPopup();
             break;

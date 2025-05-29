@@ -56,9 +56,9 @@ struct EclTimelineInstrArgs
     u16 ushortVar2;
     u32 uintVar4;
 
-    zD3DXVECTOR3 *Var1AsVec()
+    zVec3 *Var1AsVec()
     {
-        return (zD3DXVECTOR3 *)&this->uintVar1;
+        return (zVec3 *)&this->uintVar1;
     }
 };
 
@@ -122,7 +122,7 @@ struct EclRawInstrCmpArgs
 
 struct EclRawInstrMoveArgs
 {
-    ZunVec3 pos;
+    float pos[3];
 };
 
 struct EclRawInstrAnmSetMainArgs
@@ -177,7 +177,7 @@ struct EclRawInstrLaserArgs
 struct EclRawInstrLaserOpArgs
 {
     i32 laserIdx;
-    ZunVec3 arg1;
+    float arg1[3];
 };
 
 struct EclRawInstrBulletEffectsArgs
@@ -200,14 +200,14 @@ struct EclRawInstrSetInt
 struct EclRawInstrSpellcardEffectArgs
 {
     i32 effectColorId;
-    ZunVec3 pos;
+    float pos[3];
     f32 effectDistance;
 };
 
 struct EclRawInstrMoveBoundSetArgs
 {
-    ZunVec2 lowerMoveLimit;
-    ZunVec2 upperMoveLimit;
+    float lowerMoveLimit[2];
+    float upperMoveLimit[2];
 };
 
 struct EclRawInstrAnmSetPosesArgs
@@ -252,7 +252,7 @@ struct EclRawInstrDropItemArgs
 struct EclRawInstrEnemyCreateArgs
 {
     i32 subId;
-    ZunVec3 pos;
+    float pos[3];
     i16 life;
     i16 itemDrop;
     i32 score;

@@ -68,7 +68,7 @@ struct Ending
 
     ChainElem *calcChain;
     ChainElem *drawChain;
-    ZunVec2 backgroundPos;
+    zVec2 backgroundPos;
     f32 backgroundScrollSpeed;
     AnmVm sprites[16];
     char *endFileData;

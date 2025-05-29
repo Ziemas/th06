@@ -271,9 +271,9 @@ i32 GameWindow::InitD3dRendering(void)
     u8 using_d3d_hal;
     D3DPRESENT_PARAMETERS present_params;
     D3DDISPLAYMODE display_mode;
-    zD3DXVECTOR3 eye;
-    zD3DXVECTOR3 at;
-    zD3DXVECTOR3 up;
+    zVec3 eye;
+    zVec3 at;
+    zVec3 up;
     float half_width;
     float half_height;
     float aspect_ratio;
@@ -433,8 +433,8 @@ i32 GameWindow::InitD3dRendering(void)
     eye.x = half_width;
     eye.y = -half_height;
     eye.z = -camera_distance;
-    zD3DXMatrixLookAtLH(&g_Supervisor.viewMatrix, &eye, &at, &up);
-    zD3DXMatrixPerspectiveFovLH(&g_Supervisor.projectionMatrix, field_of_view_y, aspect_ratio, 100.0, 10000.0);
+    zMatrixLookAtLH(&g_Supervisor.viewMatrix, &eye, &at, &up);
+    zMatrixPerspectiveFovLH(&g_Supervisor.projectionMatrix, field_of_view_y, aspect_ratio, 100.0, 10000.0);
     g_Supervisor.d3dDevice->SetTransform(D3DTS_VIEW, (D3DMATRIX*)&g_Supervisor.viewMatrix);
     g_Supervisor.d3dDevice->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)&g_Supervisor.projectionMatrix);
     g_Supervisor.d3dDevice->GetViewport(&g_Supervisor.viewport);

@@ -30,8 +30,8 @@ struct RawStageQuadBasic
     i16 byteSize;
     i16 anmScript;
     i16 vmIdx;
-    zD3DXVECTOR3 position;
-    zD3DXVECTOR2 size;
+    zVec3 position;
+    zVec2 size;
 };
 ZUN_ASSERT_SIZE(RawStageQuadBasic, 0x1c);
 
@@ -40,8 +40,8 @@ struct RawStageObject
     i16 id;
     i8 zLevel;
     i8 flags;
-    zD3DXVECTOR3 position;
-    zD3DXVECTOR3 size;
+    zVec3 position;
+    zVec3 size;
     RawStageQuadBasic firstQuad;
 };
 ZUN_ASSERT_SIZE(RawStageObject, 0x38);
@@ -50,7 +50,7 @@ struct RawStageObjectInstance
 {
     i16 id;
     i16 unk2;
-    zD3DXVECTOR3 position;
+    zVec3 position;
 };
 ZUN_ASSERT_SIZE(RawStageObjectInstance, 0x10);
 
@@ -121,7 +121,7 @@ struct Stage
     i32 instructionIndex;
     ZunTimer timer;
     u32 stage;
-    zD3DXVECTOR3 position;
+    zVec3 position;
     StageCameraSky skyFog;
     StageCameraSky skyFogInterpInitial;
     StageCameraSky skyFogInterpFinal;
@@ -133,13 +133,13 @@ struct Stage
     AnmVm spellcardBackground;
     AnmVm unk2;
     u8 unpauseFlag;
-    zD3DXVECTOR3 facingDirInterpInitial;
-    zD3DXVECTOR3 facingDirInterpFinal;
+    zVec3 facingDirInterpInitial;
+    zVec3 facingDirInterpFinal;
     i32 facingDirInterpDuration;
     ZunTimer facingDirInterpTimer;
-    zD3DXVECTOR3 positionInterpFinal;
+    zVec3 positionInterpFinal;
     i32 positionInterpEndTime;
-    zD3DXVECTOR3 positionInterpInitial;
+    zVec3 positionInterpInitial;
     i32 positionInterpStartTime;
 };
 ZUN_ASSERT_SIZE(Stage, 0x2f4);

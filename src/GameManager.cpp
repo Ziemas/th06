@@ -502,9 +502,9 @@ void GameManager::CutChain()
 #pragma var_order(cameraDistance, viewportMiddleHeight, viewportMiddleWidth, aspectRatio, fov, upVec, atVec, eyeVec)
 void GameManager::SetupCameraStageBackground(f32 extraRenderDistance)
 {
-    zD3DXVECTOR3 eyeVec;
-    zD3DXVECTOR3 atVec;
-    zD3DXVECTOR3 upVec;
+    zVec3 eyeVec;
+    zVec3 atVec;
+    zVec3 upVec;
     f32 fov;
     f32 aspectRatio;
     f32 viewportMiddleWidth;
@@ -525,9 +525,9 @@ void GameManager::SetupCameraStageBackground(f32 extraRenderDistance)
     eyeVec.x = viewportMiddleWidth;
     eyeVec.y = -viewportMiddleHeight;
     eyeVec.z = -cameraDistance;
-    zD3DXMatrixLookAtLH(&g_Supervisor.viewMatrix, &eyeVec, &atVec, &upVec);
+    zMatrixLookAtLH(&g_Supervisor.viewMatrix, &eyeVec, &atVec, &upVec);
     g_GameManager.cameraDistance = fabsf(cameraDistance);
-    zD3DXMatrixPerspectiveFovLH(&g_Supervisor.projectionMatrix, fov, aspectRatio, 100.0f,
+    zMatrixPerspectiveFovLH(&g_Supervisor.projectionMatrix, fov, aspectRatio, 100.0f,
                                10000.0f + extraRenderDistance);
     g_Supervisor.d3dDevice->SetTransform(D3DTS_VIEW, (D3DMATRIX*)&g_Supervisor.viewMatrix);
     g_Supervisor.d3dDevice->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)&g_Supervisor.projectionMatrix);
@@ -538,9 +538,9 @@ void GameManager::SetupCameraStageBackground(f32 extraRenderDistance)
                   atVecY, atVecX, eyeVecZ)
 void GameManager::SetupCamera(f32 extraRenderDistance)
 {
-    zD3DXVECTOR3 eyeVec;
-    zD3DXVECTOR3 atVec;
-    zD3DXVECTOR3 upVec;
+    zVec3 eyeVec;
+    zVec3 atVec;
+    zVec3 upVec;
     f32 fov;
     f32 aspectRatio;
     f32 viewportMiddleWidth;
@@ -568,9 +568,9 @@ void GameManager::SetupCamera(f32 extraRenderDistance)
     eyeVec.x = viewportMiddleWidth;
     eyeVec.y = -viewportMiddleHeight;
     eyeVec.z = eyeVecZ;
-    zD3DXMatrixLookAtLH(&g_Supervisor.viewMatrix, &eyeVec, &atVec, &upVec);
+    zMatrixLookAtLH(&g_Supervisor.viewMatrix, &eyeVec, &atVec, &upVec);
     g_GameManager.cameraDistance = fabsf(cameraDistance);
-    zD3DXMatrixPerspectiveFovLH(&g_Supervisor.projectionMatrix, fov, aspectRatio, 100.0f,
+    zMatrixPerspectiveFovLH(&g_Supervisor.projectionMatrix, fov, aspectRatio, 100.0f,
                                10000.0f + extraRenderDistance);
     g_Supervisor.d3dDevice->SetTransform(D3DTS_VIEW, (D3DMATRIX*)&g_Supervisor.viewMatrix);
     g_Supervisor.d3dDevice->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)&g_Supervisor.projectionMatrix);

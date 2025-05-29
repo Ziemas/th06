@@ -26,6 +26,6 @@ void DebugPrint(const char *fmt, ...);
 void DebugPrint2(const char *fmt, ...);
 
 f32 AddNormalizeAngle(f32 a, f32 b);
-void Rotate(zD3DXVECTOR3 *outVector, zD3DXVECTOR3 *point, f32 angle);
+void Rotate(zVec3 *outVector, zVec3 *point, f32 angle);
 }; // namespace utils
 }; // namespace th06

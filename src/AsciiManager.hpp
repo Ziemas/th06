@@ -16,9 +16,9 @@ namespace th06
 struct AsciiManagerString
 {
     char text[64];
-    zD3DXVECTOR3 position;
+    zVec3 position;
     ZunColor color;
-    zD3DXVECTOR2 scale;
+    zVec2 scale;
     // If true, we are drawing the currently selected element of the MainMenu
     // class.
     u32 isSelected;
@@ -30,7 +30,7 @@ ZUN_ASSERT_SIZE(AsciiManagerString, 0x60);
 struct AsciiManagerPopup
 {
     char digits[8];
-    zD3DXVECTOR3 position;
+    zVec3 position;
     ZunColor color;
     ZunTimer timer;
     u8 inUse;
@@ -74,10 +74,10 @@ struct AsciiManager
     void DrawPopupsWithHwVertexProcessing();
     void DrawPopupsWithoutHwVertexProcessing();
 
-    void AddString(zD3DXVECTOR3 *position, char *text);
-    void AddFormatText(zD3DXVECTOR3 *position, const char *fmt, ...);
-    void CreatePopup1(zD3DXVECTOR3 *position, i32 value, ZunColor color);
-    void CreatePopup2(zD3DXVECTOR3 *position, i32 value, ZunColor color);
+    void AddString(zVec3 *position, char *text);
+    void AddFormatText(zVec3 *position, const char *fmt, ...);
+    void CreatePopup1(zVec3 *position, i32 value, ZunColor color);
+    void CreatePopup2(zVec3 *position, i32 value, ZunColor color);
 
     void SetColor(ZunColor color)
     {
@@ -89,7 +89,7 @@ struct AsciiManager
     AsciiManagerString strings[256];
     i32 numStrings;
     ZunColor color;
-    zD3DXVECTOR2 scale;
+    zVec2 scale;
     // If true, we are drawing an element of the Gui class.
     u32 isGui;
     // If true, we are drawing the currently selected element of the MainMenu

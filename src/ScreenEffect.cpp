@@ -62,10 +62,10 @@ void ScreenEffect::DrawSquare(ZunRect *rect, ZunColor rectColor)
 
     // In the original code, VertexDiffuseXyzrwh almost certainly is a vec3 with a trailing w, which would make these
     // simple vec3 assigns
-    memcpy(&vertices[0].position, &zD3DXVECTOR3(rect->left, rect->top, 0.0f), sizeof(zD3DXVECTOR3));
-    memcpy(&vertices[1].position, &zD3DXVECTOR3(rect->right, rect->top, 0.0f), sizeof(zD3DXVECTOR3));
-    memcpy(&vertices[2].position, &zD3DXVECTOR3(rect->left, rect->bottom, 0.0f), sizeof(zD3DXVECTOR3));
-    memcpy(&vertices[3].position, &zD3DXVECTOR3(rect->right, rect->bottom, 0.0f), sizeof(zD3DXVECTOR3));
+    memcpy(&vertices[0].position, &zVec3(rect->left, rect->top, 0.0f), sizeof(zVec3));
+    memcpy(&vertices[1].position, &zVec3(rect->right, rect->top, 0.0f), sizeof(zVec3));
+    memcpy(&vertices[2].position, &zVec3(rect->left, rect->bottom, 0.0f), sizeof(zVec3));
+    memcpy(&vertices[3].position, &zVec3(rect->right, rect->bottom, 0.0f), sizeof(zVec3));
     vertices[0].position.w = vertices[1].position.w = vertices[2].position.w = vertices[3].position.w = 1.00f;
     vertices[0].diffuse = vertices[1].diffuse = vertices[2].diffuse = vertices[3].diffuse = rectColor;
 
