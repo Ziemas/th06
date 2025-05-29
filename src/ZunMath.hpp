@@ -28,16 +28,6 @@ void __inline fsincos_wrapper(f32 *out_sine, f32 *out_cosine, f32 angle)
 
     *out_sine = sin;
     *out_cosine = cos;
-
-
-    //__asm {
-    //    fld [angle]
-    //    fsincos
-    //    mov eax, [out_cosine]
-    //    fstp [eax]
-    //    mov eax, [out_sine]
-    //    fstp [eax]
-    //}
 }
 
 #define sincos(in, out_sine, out_cosine) fsincos_wrapper(&out_sine, &out_cosine, in)
@@ -49,17 +39,6 @@ void __inline sincosmul(zVec3 *out_vel, f32 input, f32 multiplier)
 
     out_vel->x = cos * multiplier;
     out_vel->y = sin * multiplier;
-
-
-    //__asm {
-    //    mov eax, out_vel
-    //    fld input
-    //    fsincos
-    //    fmul [multiplier]
-    //    fstp [eax]
-    //    fmul [multiplier]
-    //    fstp [eax+4]
-    //}
 }
 
 f32 __inline invertf(f32 x)
@@ -70,10 +49,4 @@ f32 __inline invertf(f32 x)
 f32 __inline rintf(f32 float_in)
 {
     return float_in >= 0.0f ? floorf(float_in + 0.5f) : ceilf(float_in - 0.5f);
-    //__asm {
-    //    fld float_in
-    //    frndint
-    //    fstp float_in
-    //}
-    //return float_in;
 }
