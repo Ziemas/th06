@@ -9,7 +9,7 @@
 #include "diffbuild.hpp"
 #include "inttypes.hpp"
 #include <Windows.h>
-#include "d3dx/D3DX.hpp"
+#include "math/math.hpp"
 
 namespace th06
 {

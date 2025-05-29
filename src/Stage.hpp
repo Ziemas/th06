@@ -7,7 +7,7 @@
 #include "inttypes.hpp"
 #include "zwave.hpp"
 #include <d3d8.h>
-#include "d3dx/D3DX.hpp"
+#include "math/math.hpp"
 
 namespace th06
 {

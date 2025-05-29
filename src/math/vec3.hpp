@@ -6,83 +6,87 @@
  *     file, You can obtain one at http://mozilla.org/MPL/2.0/.
  **/
 
-#ifndef D3DXVECTOR4_HPP
-#define D3DXVECTOR4_HPP
+#pragma once
 
-class zVec4
+class zVec3
 {
   public:
-    float x, y, z, w;
+    float x, y, z;
 
-    zVec4()
+    zVec3()
     {
     }
 
-    zVec4(float a)
+    zVec3(const float *a)
     {
-        x = y = z = w = a;
+        this->x = a[0];
+        this->y = a[1];
+        this->z = a[2];
     }
 
-    zVec4(float x, float y, float z, float w)
+    zVec3(float a)
+    {
+        this->x = a;
+        this->y = a;
+        this->z = a;
+    }
+
+    zVec3(float x, float y, float z)
     {
         this->x = x;
         this->y = y;
         this->z = z;
-        this->w = w;
     }
 
-    zVec4 operator-(const zVec4 &v) const
+    zVec3 operator-(const zVec3 &v) const
     {
-        return zVec4(x - v.x, y - v.y, z - v.z, w - v.w);
+        return zVec3(x - v.x, y - v.y, z - v.z);
     }
 
-    zVec4 operator-() const
+    zVec3 operator-() const
     {
-        return zVec4(-x, -y, -z, -w);
+        return zVec3(-x, -y, -z);
     }
 
-    void operator-=(const zVec4 &v)
+    void operator-=(const zVec3 &v)
     {
         x -= v.x;
         y -= v.y;
         z -= v.z;
-        w -= v.w;
     }
 
-    zVec4 operator+(const zVec4 &v) const
+    zVec3 operator+(const zVec3 &v) const
     {
-        return zVec4(x + v.x, y + v.y, z + v.z, w + v.w);
+        return zVec3(x + v.x, y + v.y, z + v.z);
     }
 
-    void operator+=(const zVec4 &v)
+    void operator+=(const zVec3 &v)
     {
         x += v.x;
         y += v.y;
         z += v.z;
-        w += v.w;
     }
 
-    zVec4 operator/(const zVec4 &v) const
+    zVec3 operator/(const zVec3 &v) const
     {
-        return zVec4(x / v.x, y / v.y, z / v.z, w / v.w);
+        return zVec3(x / v.x, y / v.y, z / v.z);
     }
 
-    void operator/=(const zVec4 &v)
+    void operator/=(const zVec3 &v)
     {
         x /= v.x;
         y /= v.y;
         z /= v.z;
-        w /= v.w;
     }
 
-    zVec4 operator*(const zVec4 &v) const
+    zVec3 operator*(const zVec3 &v) const
     {
-        return zVec4(x * v.x, y * v.y, z * v.z, w * v.w);
+        return zVec3(x * v.x, y * v.y, z * v.z);
     }
 
-    zVec4 operator*(const float &a) const
+    zVec3 operator*(const float &a) const
     {
-        return zVec4(x * a, y * a, z * a, w * a);
+        return zVec3(x * a, y * a, z * a);
     }
 
     void operator*=(const float &a)
@@ -90,20 +94,14 @@ class zVec4
         x *= a;
         y *= a;
         z *= a;
-        w *= a;
     }
 
-    zVec4 operator=(const float v[4])
-    {
-        return zVec4(v[0], v[1], v[2], v[3]);
-    }
-
-    zVec4 operator/(const float &a) const
+    zVec3 operator/(const float &a) const
     {
         if (a != 0.0f)
-            return zVec4(x / a, y / a, z / a, w / a);
+            return zVec3(x / a, y / a, z / a);
         else
-            return zVec4(x, y, z, w);
+            return zVec3(x, y, z);
     }
 
     void operator/=(const float &a)
@@ -113,7 +111,6 @@ class zVec4
             x /= a;
             y /= a;
             z /= a;
-            w /= a;
         }
     }
 
@@ -129,9 +126,6 @@ class zVec4
             break;
         case 2:
             return z;
-            break;
-        case 3:
-            return w;
             break;
         }
         return -1.0f;
@@ -150,12 +144,12 @@ class zVec4
         case 2:
             return z;
             break;
-        case 3:
-            return w;
-            break;
         }
         return x;
     }
 };
 
-#endif // D3DXVECTOR4_HPP
+static zVec3 operator*(float f, const zVec3 &v)
+{
+    return zVec3(f * v.x, f * v.y, f * v.z);
+}

@@ -6,12 +6,11 @@
  *     file, You can obtain one at http://mozilla.org/MPL/2.0/.
  **/
 
-#ifndef D3DXMATRIX_HPP
-#define D3DXMATRIX_HPP
+#pragma once
 
-#include "D3DXQUATERNION.hpp"
-#include "D3DXVECTOR3.hpp"
-#include "D3DXVECTOR4.hpp"
+#include "quat.hpp"
+#include "vec3.hpp"
+#include "vec4.hpp"
 #include "math_util.hpp"
 #include <stdio.h>
 
@@ -449,5 +448,3 @@ static zMatrix *zMatrixPerspectiveFovLH(zMatrix *pOut, float fovy, float Aspect,
     pOut->_34 = 1.0f;
     return pOut;
 }
-
-#endif // D3DXMATRIX_HPP

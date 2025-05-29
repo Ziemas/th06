@@ -6,23 +6,17 @@
  *     file, You can obtain one at http://mozilla.org/MPL/2.0/.
  **/
 
-#ifndef D3DXQUATERNION_HPP
-#define D3DXQUATERNION_HPP
+#pragma once
 
-#include "D3DXFunctions.hpp"
+// classic math utils
+#include "math_util.hpp"
 
-class zQuaternion
-{
-  public:
-    float x, y, z, w;
+// D3DX
+#include "math_functions.hpp"
+#include "quat.hpp"
+#include "vec2.hpp"
+#include "vec3.hpp"
+#include "vec4.hpp"
 
-    zQuaternion()
-    {
-        x = 0.0f;
-        y = 0.0f;
-        z = 0.0f;
-        w = 1.0f;
-    }
-};
-
-#endif // D3DXQUATERNION_HPP
+// 4x4 Matrix
+#include "matrix.hpp"

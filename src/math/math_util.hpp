@@ -6,8 +6,7 @@
  *     file, You can obtain one at http://mozilla.org/MPL/2.0/.
  **/
 
-#ifndef D3DX_MATH_UTIL_HPP
-#define D3DX_MATH_UTIL_HPP
+#pragma once
 
 #include <math.h>
 
@@ -43,5 +42,3 @@ inline float madfrac(float a, float b)
     float tmp = a * b;
     return float(tmp - floorf(tmp));
 }
-
-#endif // D3DX_MATH_UTIL_HPP

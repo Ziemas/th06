@@ -6,14 +6,13 @@
  *     file, You can obtain one at http://mozilla.org/MPL/2.0/.
  **/
 
-#ifndef D3DX_FUNCTIONS_HPP
-#define D3DX_FUNCTIONS_HPP
+#pragma once
 
 #include <math.h>
 
-#include "D3DXVECTOR2.hpp"
-#include "D3DXVECTOR3.hpp"
-#include "D3DXVECTOR4.hpp"
+#include "vec2.hpp"
+#include "vec3.hpp"
+#include "vec4.hpp"
 
 static zVec3 *zVec3Cross(zVec3 *pOut, const zVec3 *A, const zVec3 *B)
 {
@@ -73,5 +72,3 @@ static float zVec3Length(const zVec3 *pV)
 {
     return sqrtf(pV->x * pV->x + pV->z * pV->z + pV->y * pV->y);
 }
-
-#endif // D3DX_FUNCTIONS_HPP

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <d3d8.h>
-#include "d3dx/D3DX.hpp"
+#include "math/math.hpp"
 
 #include "ZunColor.hpp"
 #include "ZunMath.hpp"

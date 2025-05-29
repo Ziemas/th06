@@ -5,7 +5,7 @@
 #include "diffbuild.hpp"
 #include "inttypes.hpp"
 
-#include "d3dx/D3DX.hpp"
+#include "math/math.hpp"
 
 namespace th06
 {

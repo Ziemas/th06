@@ -6,8 +6,7 @@
  *     file, You can obtain one at http://mozilla.org/MPL/2.0/.
  **/
 
-#ifndef D3DXVECTOR2_HPP
-#define D3DXVECTOR2_HPP
+#pragma once
 
 #include <cmath>
 class zVec2
@@ -92,5 +91,3 @@ class zVec2
         return sqrtf(this->x * this->x + this->y * this->y);
     }
 };
-
-#endif // D3DXVECTOR2_HPP

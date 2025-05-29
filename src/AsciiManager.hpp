@@ -1,6 +1,6 @@
 #pragma once
 
-#include "d3dx/D3DX.hpp"
+#include "math/math.hpp"
 
 #include "AnmManager.hpp"
 #include "Chain.hpp"

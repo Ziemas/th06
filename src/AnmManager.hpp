@@ -2,7 +2,7 @@
 
 #include <d3d8.h>
 #include <d3dx8tex.h>
-#include "d3dx/D3DX.hpp"
+#include "math/math.hpp"
 
 #include "AnmIdx.hpp"
 #include "AnmVm.hpp"
