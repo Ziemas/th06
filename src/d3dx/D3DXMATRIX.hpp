@@ -556,21 +556,23 @@ static zD3DXMATRIX * zD3DXMatrixMultiply(zD3DXMATRIX * pOut, const zD3DXMATRIX *
  */
 static zD3DXVECTOR3 * zD3DXVec3TransformCoord(zD3DXVECTOR3 * pOut, const zD3DXVECTOR3 * pV, const zD3DXMATRIX * pM)
 {
+    zD3DXVECTOR3 v;
     #ifdef D3DX_POINTER_CHECK
         if(!pOut) {
 		    pOut = new zD3DXVECTOR3();
         }
     #endif
  
-    pOut->x = pV->x * pM->_11 + pV->y * pM->_21 + pV->z * pM->_31 + pM->_41;
-    pOut->y = pV->x * pM->_12 + pV->y * pM->_22 + pV->z * pM->_32 + pM->_42;
-    pOut->z = pV->x * pM->_13 + pV->y * pM->_23 + pV->z * pM->_33 + pM->_43;
+    v.x = pV->x * pM->_11 + pV->y * pM->_21 + pV->z * pM->_31 + pM->_41;
+    v.y = pV->x * pM->_12 + pV->y * pM->_22 + pV->z * pM->_32 + pM->_42;
+    v.z = pV->x * pM->_13 + pV->y * pM->_23 + pV->z * pM->_33 + pM->_43;
     float w = pV->x * pM->_14 + pV->y * pM->_24 + pV->z * pM->_34 + pM->_44;
 
-	pOut->x /= w;
-	pOut->y /= w;
-	pOut->z /= w;
+	v.x /= w;
+	v.y /= w;
+	v.z /= w;
 
+    *pOut = v;
     return pOut;
 }
 
