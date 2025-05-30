@@ -11,6 +11,7 @@
 #include "ZunTimer.hpp"
 #include "diffbuild.hpp"
 #include "inttypes.hpp"
+#include "zrender.h"
 
 namespace th06
 {
@@ -68,7 +69,7 @@ struct AnmRawEntry
     u32 colorKey;
     u32 nameOffset;
     u32 spriteIdxOffset;
-    u32 mipmapNameOffset;
+    u32 alphaNameOffset;
     u32 version;
     u32 unk1;
     u32 textureOffset;
@@ -200,7 +201,7 @@ struct AnmManager
     u32 anmFilesSpriteIndexOffsets[128];
     IDirect3DSurface8 *surfaces[32];
     IDirect3DSurface8 *surfacesBis[32];
-    D3DXIMAGE_INFO surfaceSourceInfo[32];
+    zIMAGE_INFO surfaceSourceInfo[32];
     ZunColor currentTextureFactor;
     IDirect3DTexture8 *currentTexture;
     u8 currentBlendMode;

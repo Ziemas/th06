@@ -3,6 +3,7 @@
 #include "Supervisor.hpp"
 #include "i18n.hpp"
 #include <d3dx8.h>
+#include "zrender.h"
 
 namespace th06
 {
@@ -329,7 +330,7 @@ void TextHelper::RenderTextToTexture(i32 xPos, i32 yPos, i32 spriteWidth, i32 sp
     srcRect.right = spriteWidth * 2 - 2;
     srcRect.bottom = fontHeight * 2 - 2;
     outTexture->GetSurfaceLevel(0, &destSurface);
-    D3DXLoadSurfaceFromSurface(destSurface, NULL, &destRect, g_TextBufferSurface, NULL, &srcRect, 4, 0);
+    zLoadSurfaceFromSurface(destSurface, &destRect, g_TextBufferSurface, &srcRect, D3DX_FILTER_TRIANGLE);
     if (destSurface != NULL)
     {
         destSurface->Release();

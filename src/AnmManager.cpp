@@ -7,6 +7,7 @@
 #include "ZunMath.hpp"
 #include "i18n.hpp"
 #include "utils.hpp"
+#include "zrender.h"
 
 #include <stdio.h>
 
@@ -172,6 +173,7 @@ void AnmManager::SetupVertexBuffer()
 
 ZunResult AnmManager::LoadTexture(i32 textureIdx, char *textureName, i32 textureFormat, ZunColor colorKey)
 {
+    printf("loading texture %s\n", textureName);
     ReleaseTexture(textureIdx);
     this->imageDataArray[textureIdx] = FileSystem::OpenPath(textureName, 0);
 
@@ -193,10 +195,15 @@ ZunResult AnmManager::LoadTexture(i32 textureIdx, char *textureName, i32 texture
         }
     }
 
-    if (D3DXCreateTextureFromFileInMemoryEx(g_Supervisor.d3dDevice, this->imageDataArray[textureIdx], g_LastFileSize, 0,
-                                            0, 0, 0, g_TextureFormatD3D8Mapping[textureFormat], D3DPOOL_MANAGED,
-                                            D3DX_FILTER_NONE | D3DX_FILTER_POINT, D3DX_DEFAULT, colorKey, NULL, NULL,
-                                            &this->textures[textureIdx]) != D3D_OK)
+    if (zCreateTextureFromFileInMemoryEx(g_Supervisor.d3dDevice,
+                                         this->imageDataArray[textureIdx],
+                                         g_LastFileSize,
+                                         g_TextureFormatD3D8Mapping[textureFormat],
+                                         D3DPOOL_MANAGED,
+                                         D3DX_FILTER_LINEAR,
+                                         colorKey,
+                                         &this->textures[textureIdx])
+        != D3D_OK)
     {
         return ZUN_ERROR;
     }
@@ -208,6 +215,8 @@ ZunResult AnmManager::LoadTexture(i32 textureIdx, char *textureName, i32 texture
                   srcData1, y1, x1, dstData2, srcData2, y2, x2)
 ZunResult AnmManager::LoadTextureAlphaChannel(i32 textureIdx, char *textureName, i32 textureFormat, ZunColor colorKey)
 {
+    printf("loading alpha channel for %s\n", textureName);
+    printf("alpha ckey %08x\n", colorKey);
     struct Argb1555Pixel
     {
         u16 b : 5;
@@ -260,9 +269,15 @@ ZunResult AnmManager::LoadTextureAlphaChannel(i32 textureIdx, char *textureName,
         goto err;
     }
 
-    if (D3DXCreateTextureFromFileInMemoryEx(g_Supervisor.d3dDevice, data, g_LastFileSize, 0, 0, 0, 0,
-                                            surfaceDesc.Format, D3DPOOL_SYSTEMMEM, D3DX_FILTER_NONE | D3DX_FILTER_POINT,
-                                            D3DX_DEFAULT, colorKey, NULL, NULL, &textureSrc) != D3D_OK)
+    if (zCreateTextureFromFileInMemoryEx(g_Supervisor.d3dDevice,
+                                         data,
+                                         g_LastFileSize,
+                                         surfaceDesc.Format,
+                                         D3DPOOL_SYSTEMMEM,
+                                         D3DX_FILTER_LINEAR,
+                                         colorKey,
+                                         &textureSrc)
+        != D3D_OK)
     {
         goto err;
     }
@@ -343,8 +358,8 @@ err:
 
 ZunResult AnmManager::CreateEmptyTexture(i32 textureIdx, u32 width, u32 height, i32 textureFormat)
 {
-    D3DXCreateTexture(g_Supervisor.d3dDevice, width, height, 1, 0, g_TextureFormatD3D8Mapping[textureFormat],
-                      D3DPOOL_MANAGED, this->textures + textureIdx);
+    g_Supervisor.d3dDevice->CreateTexture(width, height, 1, 0, g_TextureFormatD3D8Mapping[textureFormat],
+                                          D3DPOOL_MANAGED, this->textures + textureIdx);
 
     return ZUN_SUCCESS;
 }
@@ -377,9 +392,9 @@ ZunResult AnmManager::LoadAnm(i32 anmIdx, char *path, i32 spriteIdxOffset)
         return ZUN_ERROR;
     }
 
-    if (anm->mipmapNameOffset != 0)
+    if (anm->alphaNameOffset != 0)
     {
-        anmName = (char *)((u8 *)anm + anm->mipmapNameOffset);
+        anmName = (char *)((u8 *)anm + anm->alphaNameOffset);
         if (this->LoadTextureAlphaChannel(anm->textureIdx, anmName, anm->format, anm->colorKey) != ZUN_SUCCESS)
         {
             GameErrorContext::Fatal(&g_GameErrorContext, TH_ERR_ANMMANAGER_TEXTURE_CORRUPTED, anmName);
@@ -1464,14 +1479,13 @@ ZunResult AnmManager::LoadSurface(i32 surfaceIdx, char *path)
     }
 
     LPDIRECT3DSURFACE8 surface;
-    if (g_Supervisor.d3dDevice->CreateImageSurface(0x280, 0x400, g_Supervisor.presentParameters.BackBufferFormat,
+    if (g_Supervisor.d3dDevice->CreateImageSurface(640, 1024, g_Supervisor.presentParameters.BackBufferFormat,
                                                    &surface) != D3D_OK)
     {
         return ZUN_ERROR;
     }
 
-    if (D3DXLoadSurfaceFromFileInMemory(surface, NULL, NULL, data, g_LastFileSize, NULL, D3DX_FILTER_NONE, 0,
-                                        &this->surfaceSourceInfo[surfaceIdx]) != D3D_OK)
+    if (zLoadSurfaceFromFileInMemory(surface, data, g_LastFileSize, &surfaceSourceInfo[surfaceIdx]) != D3D_OK)
     {
         goto fail;
     }
@@ -1492,14 +1506,13 @@ ZunResult AnmManager::LoadSurface(i32 surfaceIdx, char *path)
         goto fail;
     }
 
-    if (D3DXLoadSurfaceFromSurface(this->surfaces[surfaceIdx], NULL, NULL, surface, NULL, NULL, D3DX_FILTER_NONE, 0) !=
+    if (zLoadSurfaceFromSurface(this->surfaces[surfaceIdx], NULL, surface,  NULL, D3DX_FILTER_NONE) !=
         D3D_OK)
     {
         goto fail;
     }
 
-    if (D3DXLoadSurfaceFromSurface(this->surfacesBis[surfaceIdx], NULL, NULL, surface, NULL, NULL, D3DX_FILTER_NONE,
-                                   0) != D3D_OK)
+    if (zLoadSurfaceFromSurface(this->surfacesBis[surfaceIdx], NULL, surface, NULL, D3DX_FILTER_NONE) != D3D_OK)
     {
         goto fail;
     }
@@ -1563,8 +1576,8 @@ void AnmManager::CopySurfaceToBackBuffer(i32 surfaceIdx, i32 left, i32 top, i32 
                 return;
             }
         }
-        if (D3DXLoadSurfaceFromSurface(this->surfaces[surfaceIdx], NULL, NULL, this->surfacesBis[surfaceIdx], NULL,
-                                       NULL, D3DX_FILTER_NONE, 0) != D3D_OK)
+        if (zLoadSurfaceFromSurface(this->surfaces[surfaceIdx], NULL, this->surfacesBis[surfaceIdx], NULL,
+                                    D3DX_FILTER_NONE) != D3D_OK)
         {
             destSurface->Release();
             return;
@@ -1611,8 +1624,8 @@ void AnmManager::DrawEndingRect(i32 surfaceIdx, i32 rectX, i32 rectY, i32 rectLe
                 return;
             }
         }
-        if (D3DXLoadSurfaceFromSurface(this->surfaces[surfaceIdx], NULL, NULL, this->surfacesBis[surfaceIdx], NULL,
-                                       NULL, D3DX_FILTER_NONE, 0) != D3D_OK)
+        if (zLoadSurfaceFromSurface(this->surfaces[surfaceIdx], NULL, this->surfacesBis[surfaceIdx], NULL,
+                                    D3DX_FILTER_NONE) != D3D_OK)
         {
             D3D_Surface->Release();
             return;
@@ -1656,7 +1669,7 @@ void AnmManager::TakeScreenshot(i32 textureId, i32 left, i32 top, i32 width, i32
     rect.top = top;
     rect.right = left + width;
     rect.bottom = top + height;
-    if (D3DXLoadSurfaceFromSurface(destSurface, NULL, NULL, sourceSurface, NULL, &rect, D3DX_DEFAULT, 0) != D3D_OK)
+    if (zLoadSurfaceFromSurface(destSurface, NULL, sourceSurface, &rect, D3DX_DEFAULT) != D3D_OK)
     {
         destSurface->Release();
         sourceSurface->Release();

@@ -134,6 +134,7 @@ def configure(build_type):
             "ZunTimer",
             "zmath",
             "zimage",
+            "zrender",
         ]
 
         pbg3_sources = [
