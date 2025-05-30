@@ -133,6 +133,7 @@ def configure(build_type):
             "BulletData",
             "ZunTimer",
             "zmath",
+            "zimage",
         ]
 
         pbg3_sources = [
