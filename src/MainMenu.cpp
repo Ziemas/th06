@@ -2091,7 +2091,7 @@ ZunResult MainMenu::LoadTitleAnm(MainMenu *menu)
         menu->vm[i].flags.zWriteDisable = 1;
     }
 
-    if (g_AnmManager->LoadSurface(0, "data/title/title00.jpg"))
+    if (g_AnmManager->LoadBackground("data/title/title00.jpg"))
     {
         return ZUN_ERROR;
     }
@@ -2110,7 +2110,7 @@ ZunResult MainMenu::LoadDiffCharSelect(MainMenu *menu)
     {
         g_AnmManager->ReleaseAnm(i);
     }
-    if (g_AnmManager->LoadSurface(0, "data/title/select00.jpg") != ZUN_SUCCESS)
+    if (g_AnmManager->LoadBackground("data/title/select00.jpg") != ZUN_SUCCESS)
     {
         return ZUN_ERROR;
     }
@@ -2183,7 +2183,7 @@ ZunResult MainMenu::LoadReplayMenu(MainMenu *menu)
         g_AnmManager->ReleaseAnm(fileIdx);
     }
 
-    if (g_AnmManager->LoadSurface(0, "data/title/select00.jpg") != ZUN_SUCCESS)
+    if (g_AnmManager->LoadBackground("data/title/select00.jpg") != ZUN_SUCCESS)
     {
         return ZUN_ERROR;
     }
@@ -2345,7 +2345,7 @@ ZunResult MainMenu::DeletedCallback(MainMenu *menu)
     {
         g_AnmManager->ReleaseAnm(i1);
     }
-    g_AnmManager->ReleaseSurface(0);
+    g_AnmManager->ReleaseBgSurface();
 
     // TODO: Inline function, but when inlining it, I lose control over the
     // stack slots, and it stops matching.

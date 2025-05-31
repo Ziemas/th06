@@ -186,7 +186,7 @@ ZunResult Ending::ParseEndFile()
             case END_OPCODE_BACKGROUND:
                 /* background(jpg_file) */
 
-                if (g_AnmManager->LoadSurface(0, this->endFileDataPtr + 1) != ZUN_SUCCESS)
+                if (g_AnmManager->LoadBackground(this->endFileDataPtr + 1) != ZUN_SUCCESS)
                 {
                     return ZUN_ERROR;
                 }
@@ -623,7 +623,7 @@ ZunResult Ending::DeletedCallback(Ending *ending)
 
     g_Supervisor.curState = SUPERVISOR_STATE_RESULTSCREEN_FROMGAME;
 
-    g_AnmManager->ReleaseSurface(0);
+    g_AnmManager->ReleaseBgSurface();
 
     // This has the same effect as doing "delete ending->endFileData" since delete just calls free, but for some reason,
     // in both ways, the stack doesn't match with the other variable used in delete ending, in theory this should should

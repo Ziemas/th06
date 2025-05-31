@@ -2,7 +2,6 @@
 
 #include <windows.h>
 
-#include <d3dx8core.h>
 #include <stdio.h>
 
 #include "AnmManager.hpp"
@@ -102,7 +101,7 @@ restart:
             }
             else if (testCoopLevelRes == D3DERR_DEVICENOTRESET)
             {
-                g_AnmManager->ReleaseSurfaces();
+                g_AnmManager->ReleaseBgSurface();
                 testResetRes = g_Supervisor.d3dDevice->Reset(&g_Supervisor.presentParameters);
                 if (testResetRes != 0)
                 {

@@ -236,7 +236,7 @@ ZunResult MusicRoom::AddedCallback(MusicRoom *musicRoom)
     char lineCharBuffer[64];
     i32 lineIndex;
 
-    if (g_AnmManager->LoadSurface(0, "data/result/music.jpg") != ZUN_SUCCESS)
+    if (g_AnmManager->LoadBackground("data/result/music.jpg") != ZUN_SUCCESS)
     {
         return ZUN_ERROR;
     }
@@ -409,7 +409,7 @@ ZunResult MusicRoom::DeletedCallback(MusicRoom *musicRoom)
     delete musicRoom->trackDescriptors;
     musicRoom->trackDescriptors = NULL;
 
-    g_AnmManager->ReleaseSurface(0);
+    g_AnmManager->ReleaseBgSurface();
     g_AnmManager->ReleaseAnm(ANM_FILE_MUSIC00);
     g_AnmManager->ReleaseAnm(ANM_FILE_MUSIC01);
     g_AnmManager->ReleaseAnm(ANM_FILE_MUSIC02);

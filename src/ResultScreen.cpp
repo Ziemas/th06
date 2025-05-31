@@ -2101,7 +2101,7 @@ ZunResult ResultScreen::AddedCallback(ResultScreen *resultScreen)
     if (resultScreen->resultScreenState != RESULT_SCREEN_STATE_EXIT)
     {
 
-        if (g_AnmManager->LoadSurface(0, "data/result/result.jpg") != ZUN_SUCCESS)
+        if (g_AnmManager->LoadBackground("data/result/result.jpg") != ZUN_SUCCESS)
         {
             return ZUN_ERROR;
         }
@@ -2233,7 +2233,7 @@ ZunResult ResultScreen::DeletedCallback(ResultScreen *resultScreen)
     g_AnmManager->ReleaseAnm(ANM_FILE_RESULT01);
     g_AnmManager->ReleaseAnm(ANM_FILE_RESULT02);
     g_AnmManager->ReleaseAnm(ANM_FILE_RESULT03);
-    g_AnmManager->ReleaseSurface(0);
+    g_AnmManager->ReleaseBgSurface();
 
     g_Chain.Cut(resultScreen->drawChain);
 

@@ -157,7 +157,7 @@ void GameWindow::Present()
     i32 unused;
     if (g_Supervisor.d3dDevice->Present(NULL, NULL, NULL, NULL) < 0)
     {
-        g_AnmManager->ReleaseSurfaces();
+        g_AnmManager->ReleaseBgSurface();
         g_Supervisor.d3dDevice->Reset(&g_Supervisor.presentParameters);
         InitD3dDevice();
         g_Supervisor.unk198 = 2;
@@ -313,6 +313,7 @@ i32 GameWindow::InitD3dRendering(void)
         {
             present_params.BackBufferFormat = D3DFMT_R5G6B5;
         }
+
         if (!((g_Supervisor.cfg.opts >> GCOS_FORCE_60FPS) & 1))
         {
             present_params.FullScreen_PresentationInterval = D3DPRESENT_INTERVAL_ONE;
@@ -323,6 +324,7 @@ i32 GameWindow::InitD3dRendering(void)
             present_params.FullScreen_PresentationInterval = D3DPRESENT_INTERVAL_ONE;
             GameErrorContext::Log(&g_GameErrorContext, TH_ERR_SET_REFRESH_RATE_60HZ);
         }
+
         if (g_Supervisor.cfg.frameskipConfig == 0)
         {
             present_params.SwapEffect = D3DSWAPEFFECT_FLIP;
@@ -435,8 +437,8 @@ i32 GameWindow::InitD3dRendering(void)
     eye.z = -camera_distance;
     zMatrixLookAtLH(&g_Supervisor.viewMatrix, &eye, &at, &up);
     zMatrixPerspectiveFovLH(&g_Supervisor.projectionMatrix, field_of_view_y, aspect_ratio, 100.0, 10000.0);
-    g_Supervisor.d3dDevice->SetTransform(D3DTS_VIEW, (D3DMATRIX*)&g_Supervisor.viewMatrix);
-    g_Supervisor.d3dDevice->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)&g_Supervisor.projectionMatrix);
+    g_Supervisor.d3dDevice->SetTransform(D3DTS_VIEW, (D3DMATRIX *)&g_Supervisor.viewMatrix);
+    g_Supervisor.d3dDevice->SetTransform(D3DTS_PROJECTION, (D3DMATRIX *)&g_Supervisor.projectionMatrix);
     g_Supervisor.d3dDevice->GetViewport(&g_Supervisor.viewport);
     g_Supervisor.d3dDevice->GetDeviceCaps(&g_Supervisor.d3dCaps);
     if (((((g_Supervisor.cfg.opts >> GCOS_USE_D3D_HW_TEXTURE_BLENDING) & 1) == 0) &&

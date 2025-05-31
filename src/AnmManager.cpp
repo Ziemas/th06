@@ -18,30 +18,12 @@ DIFFABLE_STATIC(VertexTex1DiffuseXyzrwh, g_PrimitivesToDrawNoVertexBuf[4]);
 DIFFABLE_STATIC(VertexTex1DiffuseXyz, g_PrimitivesToDrawUnknown[4]);
 DIFFABLE_STATIC(AnmManager *, g_AnmManager)
 
-#ifndef DIFFBUILD
-D3DFORMAT g_TextureFormatD3D8Mapping[6] = {
-    D3DFMT_UNKNOWN, D3DFMT_A8R8G8B8, D3DFMT_A1R5G5B5, D3DFMT_R5G6B5, D3DFMT_R8G8B8, D3DFMT_A4R4G4B4,
-};
-#endif
-
 #define TEX_FMT_UNKNOWN 0
 #define TEX_FMT_A8R8G8B8 1
 #define TEX_FMT_A1R5G5B5 2
 #define TEX_FMT_R5G6B5 3
 #define TEX_FMT_R8G8B8 4
 #define TEX_FMT_A4R4G4B4 5
-
-void AnmManager::ReleaseSurfaces(void)
-{
-    for (i32 idx = 0; idx < ARRAY_SIZE_SIGNED(this->surfaces); idx++)
-    {
-        if (this->surfaces[idx] != NULL)
-        {
-            this->surfaces[idx]->Release();
-            this->surfaces[idx] = NULL;
-        }
-    }
-}
 
 void AnmManager::TakeScreenshotIfRequested()
 {
@@ -171,195 +153,62 @@ void AnmManager::SetupVertexBuffer()
     }
 }
 
-ZunResult AnmManager::LoadTexture(i32 textureIdx, char *textureName, i32 textureFormat, ZunColor colorKey)
+ZunResult AnmManager::LoadAnmTex(AnmRawEntry *anm)
 {
-    printf("loading texture %s\n", textureName);
-    ReleaseTexture(textureIdx);
-    this->imageDataArray[textureIdx] = FileSystem::OpenPath(textureName, 0);
+    char *anmName = (char *)((u8 *)anm + anm->nameOffset);
+    int bufsize = anm->width * anm->height * 4;
+    unsigned int *buf;
 
-    if (this->imageDataArray[textureIdx] == NULL)
-    {
-        return ZUN_ERROR;
-    }
+    buf = (unsigned int *)malloc(bufsize);
+    memset(buf, 0, bufsize);
 
-    if (((g_Supervisor.cfg.opts >> GCOS_FORCE_16BIT_COLOR_MODE) & 1) != 0)
+    if (*anmName != '@')
     {
-        if (g_TextureFormatD3D8Mapping[textureFormat] == D3DFMT_A8R8G8B8 ||
-            g_TextureFormatD3D8Mapping[textureFormat] == D3DFMT_UNKNOWN)
+        stbi_uc *px;
+        zIMAGE_INFO info;
+        zLoadPixelsFromFile(anmName, &px, &info);
+        if (info.Width != anm->width || info.Height != anm->height)
         {
-            textureFormat = TEX_FMT_A4R4G4B4;
+            GameErrorContext::Fatal(&g_GameErrorContext, "Mismatched image dimensions %s", anmName);
+            return ZUN_ERROR;
         }
-        else if (g_TextureFormatD3D8Mapping[textureFormat] == D3DFMT_R8G8B8)
+
+        memcpy(buf, px, bufsize);
+        zFreePixels(px);
+    }
+
+    if (anm->alphaNameOffset != 0)
+    {
+        stbi_uc *px;
+        zIMAGE_INFO info;
+
+        char *alpha_name = (char *)((u8 *)anm + anm->alphaNameOffset);
+
+        zLoadPixelsFromFile(alpha_name, &px, &info);
+        if (info.Width != anm->width || info.Height != anm->height)
         {
-            textureFormat = TEX_FMT_R5G6B5;
+            GameErrorContext::Fatal(&g_GameErrorContext, "Mismatched image dimensions %s", alpha_name);
+            return ZUN_ERROR;
         }
-    }
 
-    if (zCreateTextureFromFileInMemoryEx(g_Supervisor.d3dDevice,
-                                         this->imageDataArray[textureIdx],
-                                         g_LastFileSize,
-                                         g_TextureFormatD3D8Mapping[textureFormat],
-                                         D3DPOOL_MANAGED,
-                                         D3DX_FILTER_LINEAR,
-                                         colorKey,
-                                         &this->textures[textureIdx])
-        != D3D_OK)
-    {
-        return ZUN_ERROR;
-    }
-
-    return ZUN_SUCCESS;
-}
-
-#pragma var_order(surfaceDesc, data, lockedRectDst, lockedRectSrc, textureSrc, dstData0, srcData0, y0, x0, dstData1,   \
-                  srcData1, y1, x1, dstData2, srcData2, y2, x2)
-ZunResult AnmManager::LoadTextureAlphaChannel(i32 textureIdx, char *textureName, i32 textureFormat, ZunColor colorKey)
-{
-    printf("loading alpha channel for %s\n", textureName);
-    printf("alpha ckey %08x\n", colorKey);
-    struct Argb1555Pixel
-    {
-        u16 b : 5;
-        u16 g : 5;
-        u16 r : 5;
-        u16 a : 1;
-    };
-
-    struct Argb4444Pixel
-    {
-        u16 b : 4;
-        u16 g : 4;
-        u16 r : 4;
-        u16 a : 4;
-    };
-
-    IDirect3DTexture8 *textureSrc;
-    D3DSURFACE_DESC surfaceDesc;
-    D3DLOCKED_RECT lockedRectDst;
-    D3DLOCKED_RECT lockedRectSrc;
-    u8 *data;
-
-    u8 *dstData0;
-    u8 *srcData0;
-    i32 x0;
-    i32 y0;
-    Argb1555Pixel *dstData1;
-    Argb1555Pixel *srcData1;
-    i32 y1;
-    i32 x1;
-    Argb4444Pixel *dstData2;
-    Argb4444Pixel *srcData2;
-    i32 y2;
-    i32 x2;
-
-    textureSrc = NULL;
-    data = FileSystem::OpenPath(textureName, 0);
-
-    if (data == NULL)
-    {
-        return ZUN_ERROR;
-    }
-
-    this->textures[textureIdx]->GetLevelDesc(0, &surfaceDesc);
-
-    if (surfaceDesc.Format != D3DFMT_A8R8G8B8 && surfaceDesc.Format != D3DFMT_A4R4G4B4 &&
-        surfaceDesc.Format != D3DFMT_A1R5G5B5)
-    {
-        GameErrorContext::Fatal(&g_GameErrorContext, TH_ERR_ANMMANAGER_UNK_TEX_FORMAT);
-        goto err;
-    }
-
-    if (zCreateTextureFromFileInMemoryEx(g_Supervisor.d3dDevice,
-                                         data,
-                                         g_LastFileSize,
-                                         surfaceDesc.Format,
-                                         D3DPOOL_SYSTEMMEM,
-                                         D3DX_FILTER_LINEAR,
-                                         colorKey,
-                                         &textureSrc)
-        != D3D_OK)
-    {
-        goto err;
-    }
-
-    if (this->textures[textureIdx]->LockRect(0, &lockedRectDst, NULL, 0) != 0)
-        goto err;
-
-    if (textureSrc->LockRect(0, &lockedRectSrc, NULL, D3DLOCK_NO_DIRTY_UPDATE) != 0)
-        goto err;
-
-    // Copy over the alpha channel from the source to the destination, taking
-    // into account the texture format.
-    switch (surfaceDesc.Format)
-    {
-    case D3DFMT_A8R8G8B8:
-        for (y0 = 0; y0 < surfaceDesc.Height; y0++)
+        for (int i = 0; i < anm->width * anm->height; i++)
         {
-            dstData0 = (u8 *)lockedRectDst.pBits + y0 * lockedRectDst.Pitch;
-            srcData0 = (u8 *)lockedRectSrc.pBits + y0 * lockedRectSrc.Pitch;
-
-            for (x0 = 0; x0 < surfaceDesc.Width; x0++, srcData0 += 4, dstData0 += 4)
-            {
-                dstData0[3] = srcData0[0];
-            }
+            buf[i] &= 0x00ffffff;
+            buf[i] |= px[i * 4] << 24;
         }
-        break;
 
-    case D3DFMT_A1R5G5B5:
-        for (y1 = 0; y1 < surfaceDesc.Height; y1++)
-        {
-
-            dstData1 = (Argb1555Pixel *)((u8 *)lockedRectDst.pBits + y1 * lockedRectDst.Pitch);
-            srcData1 = (Argb1555Pixel *)((u8 *)lockedRectSrc.pBits + y1 * lockedRectSrc.Pitch);
-
-            for (x1 = 0; x1 < surfaceDesc.Width; x1++, srcData1++, dstData1++)
-            {
-                dstData1->a = srcData1->b >> 4;
-            }
-        }
-        break;
-
-    case D3DFMT_A4R4G4B4:
-        for (y2 = 0; y2 < surfaceDesc.Height; y2++)
-        {
-            dstData2 = (Argb4444Pixel *)((u8 *)lockedRectDst.pBits + y2 * lockedRectDst.Pitch);
-            srcData2 = (Argb4444Pixel *)((u8 *)lockedRectSrc.pBits + y2 * lockedRectSrc.Pitch);
-
-            for (x2 = 0; x2 < surfaceDesc.Width; x2++, srcData2++, dstData2++)
-            {
-                dstData2->a = srcData2->b;
-            }
-        }
-        break;
+        zFreePixels(px);
     }
 
-    textureSrc->UnlockRect(0);
-    this->textures[textureIdx]->UnlockRect(0);
+    g_Supervisor.d3dDevice->CreateTexture(anm->width, anm->height, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED,
+                                          &textures[anm->textureIdx]);
 
-    if (textureSrc != NULL)
-    {
-        textureSrc->Release();
-        textureSrc = NULL;
-    }
+    D3DLOCKED_RECT lr;
+    textures[anm->textureIdx]->LockRect(0, &lr, 0, 0);
+    copy_rgba_to_argb(lr.pBits, buf, bufsize);
+    textures[anm->textureIdx]->UnlockRect(0);
 
-    free(data);
-    return ZUN_SUCCESS;
-
-err:
-    if (textureSrc != NULL)
-    {
-        textureSrc->Release();
-        textureSrc = NULL;
-    }
-
-    free(data);
-    return ZUN_ERROR;
-}
-
-ZunResult AnmManager::CreateEmptyTexture(i32 textureIdx, u32 width, u32 height, i32 textureFormat)
-{
-    g_Supervisor.d3dDevice->CreateTexture(width, height, 1, 0, g_TextureFormatD3D8Mapping[textureFormat],
-                                          D3DPOOL_MANAGED, this->textures + textureIdx);
+    free(buf);
 
     return ZUN_SUCCESS;
 }
@@ -380,27 +229,7 @@ ZunResult AnmManager::LoadAnm(i32 anmIdx, char *path, i32 spriteIdxOffset)
 
     anm->textureIdx = anmIdx;
 
-    char *anmName = (char *)((u8 *)anm + anm->nameOffset);
-
-    if (*anmName == '@')
-    {
-        this->CreateEmptyTexture(anm->textureIdx, anm->width, anm->height, anm->format);
-    }
-    else if (this->LoadTexture(anm->textureIdx, anmName, anm->format, anm->colorKey) != ZUN_SUCCESS)
-    {
-        GameErrorContext::Fatal(&g_GameErrorContext, TH_ERR_ANMMANAGER_TEXTURE_CORRUPTED, anmName);
-        return ZUN_ERROR;
-    }
-
-    if (anm->alphaNameOffset != 0)
-    {
-        anmName = (char *)((u8 *)anm + anm->alphaNameOffset);
-        if (this->LoadTextureAlphaChannel(anm->textureIdx, anmName, anm->format, anm->colorKey) != ZUN_SUCCESS)
-        {
-            GameErrorContext::Fatal(&g_GameErrorContext, TH_ERR_ANMMANAGER_TEXTURE_CORRUPTED, anmName);
-            return ZUN_ERROR;
-        }
-    }
+    LoadAnmTex(anm);
 
     anm->spriteIdxOffset = spriteIdxOffset;
 
@@ -905,7 +734,7 @@ ZunResult AnmManager::Draw3(AnmVm *vm)
     worldTransformMatrix.m[3][2] = vm->pos.z;
 
     // Now, set transform matrix.
-    g_Supervisor.d3dDevice->SetTransform(D3DTS_WORLD, (D3DMATRIX*)&worldTransformMatrix);
+    g_Supervisor.d3dDevice->SetTransform(D3DTS_WORLD, (D3DMATRIX *)&worldTransformMatrix);
 
     // Load sprite if vm->sprite is not the same as current sprite.
     if (this->currentSprite != vm->sprite)
@@ -914,7 +743,7 @@ ZunResult AnmManager::Draw3(AnmVm *vm)
         textureMatrix = vm->matrix;
         textureMatrix.m[2][0] = vm->sprite->uvStart.x + vm->uvScrollPos.x;
         textureMatrix.m[2][1] = vm->sprite->uvStart.y + vm->uvScrollPos.y;
-        g_Supervisor.d3dDevice->SetTransform(D3DTS_TEXTURE0, (D3DMATRIX*)&textureMatrix);
+        g_Supervisor.d3dDevice->SetTransform(D3DTS_TEXTURE0, (D3DMATRIX *)&textureMatrix);
         if (this->currentTexture != this->textures[vm->sprite->sourceFileIndex])
         {
             this->currentTexture = this->textures[vm->sprite->sourceFileIndex];
@@ -992,7 +821,7 @@ ZunResult AnmManager::Draw2(AnmVm *vm)
     worldTransformMatrix.m[3][2] = vm->pos.z;
     worldTransformMatrix.m[0][0] *= vm->scaleX;
     worldTransformMatrix.m[1][1] *= -vm->scaleY;
-    g_Supervisor.d3dDevice->SetTransform(D3DTS_WORLD, (D3DMATRIX*)&worldTransformMatrix);
+    g_Supervisor.d3dDevice->SetTransform(D3DTS_WORLD, (D3DMATRIX *)&worldTransformMatrix);
 
     if (this->currentSprite != vm->sprite)
     {
@@ -1000,7 +829,7 @@ ZunResult AnmManager::Draw2(AnmVm *vm)
         textureMatrix = vm->matrix;
         textureMatrix.m[2][0] = vm->sprite->uvStart.x + vm->uvScrollPos.x;
         textureMatrix.m[2][1] = vm->sprite->uvStart.y + vm->uvScrollPos.y;
-        g_Supervisor.d3dDevice->SetTransform(D3DTS_TEXTURE0, (D3DMATRIX*)&textureMatrix);
+        g_Supervisor.d3dDevice->SetTransform(D3DTS_TEXTURE0, (D3DMATRIX *)&textureMatrix);
         if (this->currentTexture != this->textures[vm->sprite->sourceFileIndex])
         {
             this->currentTexture = this->textures[vm->sprite->sourceFileIndex];
@@ -1150,8 +979,7 @@ i32 AnmManager::ExecuteScript(AnmVm *vm)
         case AnmOpcode_SetTranslation:
             if (vm->flags.flag5 == 0)
             {
-                vm->pos =
-                    zVec3(*(f32 *)&curInstr->args[0], *(f32 *)&curInstr->args[1], *(f32 *)&curInstr->args[2]);
+                vm->pos = zVec3(*(f32 *)&curInstr->args[0], *(f32 *)&curInstr->args[1], *(f32 *)&curInstr->args[2]);
             }
             else
             {
@@ -1465,12 +1293,15 @@ void AnmManager::DrawStringFormat2(AnmManager *mgr, AnmVm *vm, ZunColor textColo
     return;
 }
 
-ZunResult AnmManager::LoadSurface(i32 surfaceIdx, char *path)
+ZunResult AnmManager::LoadBackground(char *path)
 {
-    if (this->surfaces[surfaceIdx] != NULL)
+    ZunResult ret;
+
+    if (bgSurface != NULL)
     {
-        this->ReleaseSurface(surfaceIdx);
+        ReleaseBgSurface();
     }
+
     u8 *data = FileSystem::OpenPath(path, 0);
     if (data == NULL)
     {
@@ -1478,80 +1309,60 @@ ZunResult AnmManager::LoadSurface(i32 surfaceIdx, char *path)
         return ZUN_ERROR;
     }
 
-    LPDIRECT3DSURFACE8 surface;
+    IDirect3DSurface8 *surface;
     if (g_Supervisor.d3dDevice->CreateImageSurface(640, 1024, g_Supervisor.presentParameters.BackBufferFormat,
                                                    &surface) != D3D_OK)
     {
         return ZUN_ERROR;
     }
 
-    if (zLoadSurfaceFromFileInMemory(surface, data, g_LastFileSize, &surfaceSourceInfo[surfaceIdx]) != D3D_OK)
+    if (zLoadSurfaceFromFileInMemory(surface, data, g_LastFileSize, &bgImgInfo) != D3D_OK)
     {
-        goto fail;
+        ret = ZUN_ERROR;
+        goto exit;
     }
-    if (g_Supervisor.d3dDevice->CreateRenderTarget(this->surfaceSourceInfo[surfaceIdx].Width,
-                                                   this->surfaceSourceInfo[surfaceIdx].Height,
+
+    if (g_Supervisor.d3dDevice->CreateRenderTarget(bgImgInfo.Width, bgImgInfo.Height,
                                                    g_Supervisor.presentParameters.BackBufferFormat, D3DMULTISAMPLE_NONE,
-                                                   TRUE, &this->surfaces[surfaceIdx]) != D3D_OK &&
+                                                   TRUE, &bgSurface) != D3D_OK &&
         g_Supervisor.d3dDevice->CreateImageSurface(
-            this->surfaceSourceInfo[surfaceIdx].Width, this->surfaceSourceInfo[surfaceIdx].Height,
-            g_Supervisor.presentParameters.BackBufferFormat, &this->surfaces[surfaceIdx]) != D3D_OK)
+            bgImgInfo.Width, bgImgInfo.Height, g_Supervisor.presentParameters.BackBufferFormat, &bgSurface) != D3D_OK)
     {
-        goto fail;
-    }
-    if (g_Supervisor.d3dDevice->CreateImageSurface(
-            this->surfaceSourceInfo[surfaceIdx].Width, this->surfaceSourceInfo[surfaceIdx].Height,
-            g_Supervisor.presentParameters.BackBufferFormat, &this->surfacesBis[surfaceIdx]) != D3D_OK)
-    {
-        goto fail;
+        ret = ZUN_ERROR;
+        goto exit;
     }
 
-    if (zLoadSurfaceFromSurface(this->surfaces[surfaceIdx], NULL, surface,  NULL, D3DX_FILTER_NONE) !=
-        D3D_OK)
+    if (zLoadSurfaceFromSurface(bgSurface, NULL, surface, NULL, 0) != D3D_OK)
     {
-        goto fail;
+        ret = ZUN_ERROR;
+        goto exit;
     }
 
-    if (zLoadSurfaceFromSurface(this->surfacesBis[surfaceIdx], NULL, surface, NULL, D3DX_FILTER_NONE) != D3D_OK)
-    {
-        goto fail;
-    }
+    ret = ZUN_SUCCESS;
 
+exit:
     if (surface != NULL)
     {
         surface->Release();
         surface = NULL;
     }
     free(data);
-    return ZUN_SUCCESS;
 
-fail:
-    if (surface != NULL)
-    {
-        surface->Release();
-        surface = NULL;
-    }
-    free(data);
-    return ZUN_ERROR;
+    return ret;
 }
 
-void AnmManager::ReleaseSurface(i32 surfaceIdx)
+void AnmManager::ReleaseBgSurface()
 {
-    if (this->surfaces[surfaceIdx] != NULL)
+    if (bgSurface != NULL)
     {
-        this->surfaces[surfaceIdx]->Release();
-        this->surfaces[surfaceIdx] = NULL;
-    }
-    if (this->surfacesBis[surfaceIdx] != NULL)
-    {
-        this->surfacesBis[surfaceIdx]->Release();
-        this->surfacesBis[surfaceIdx] = NULL;
+        bgSurface->Release();
+        bgSurface = NULL;
     }
 }
 
 void AnmManager::CopySurfaceToBackBuffer(i32 surfaceIdx, i32 left, i32 top, i32 x, i32 y)
 {
-    if (this->surfacesBis[surfaceIdx] == NULL)
+    if (bgSurface == NULL)
     {
         return;
     }
@@ -1561,44 +1372,22 @@ void AnmManager::CopySurfaceToBackBuffer(i32 surfaceIdx, i32 left, i32 top, i32 
     {
         return;
     }
-    if (this->surfaces[surfaceIdx] == NULL)
-    {
-        if (g_Supervisor.d3dDevice->CreateRenderTarget(
-                this->surfaceSourceInfo[surfaceIdx].Width, this->surfaceSourceInfo[surfaceIdx].Height,
-                g_Supervisor.presentParameters.BackBufferFormat, D3DMULTISAMPLE_NONE, TRUE,
-                &this->surfaces[surfaceIdx]) != D3D_OK)
-        {
-            if (g_Supervisor.d3dDevice->CreateImageSurface(
-                    this->surfaceSourceInfo[surfaceIdx].Width, this->surfaceSourceInfo[surfaceIdx].Height,
-                    g_Supervisor.presentParameters.BackBufferFormat, &this->surfaces[surfaceIdx]) != D3D_OK)
-            {
-                destSurface->Release();
-                return;
-            }
-        }
-        if (zLoadSurfaceFromSurface(this->surfaces[surfaceIdx], NULL, this->surfacesBis[surfaceIdx], NULL,
-                                    D3DX_FILTER_NONE) != D3D_OK)
-        {
-            destSurface->Release();
-            return;
-        }
-    }
 
     RECT sourceRect;
     POINT destPoint;
     sourceRect.left = left;
     sourceRect.top = top;
-    sourceRect.right = this->surfaceSourceInfo[surfaceIdx].Width;
-    sourceRect.bottom = this->surfaceSourceInfo[surfaceIdx].Height;
+    sourceRect.right = bgImgInfo.Width;
+    sourceRect.bottom = bgImgInfo.Height;
     destPoint.x = x;
     destPoint.y = y;
-    g_Supervisor.d3dDevice->CopyRects(this->surfaces[surfaceIdx], &sourceRect, 1, destSurface, &destPoint);
+    g_Supervisor.d3dDevice->CopyRects(bgSurface, &sourceRect, 1, destSurface, &destPoint);
     destSurface->Release();
 }
 
 void AnmManager::DrawEndingRect(i32 surfaceIdx, i32 rectX, i32 rectY, i32 rectLeft, i32 rectTop, i32 width, i32 height)
 {
-    if (this->surfacesBis[surfaceIdx] == NULL)
+    if (bgSurface == NULL)
     {
         return;
     }
@@ -1609,29 +1398,6 @@ void AnmManager::DrawEndingRect(i32 surfaceIdx, i32 rectX, i32 rectY, i32 rectLe
         return;
     }
 
-    if (this->surfaces[surfaceIdx] == NULL)
-    {
-        if (g_Supervisor.d3dDevice->CreateRenderTarget(
-                this->surfaceSourceInfo[surfaceIdx].Width, this->surfaceSourceInfo[surfaceIdx].Height,
-                g_Supervisor.presentParameters.BackBufferFormat, D3DMULTISAMPLE_NONE, TRUE,
-                &this->surfaces[surfaceIdx]) != D3D_OK)
-        {
-            if (g_Supervisor.d3dDevice->CreateImageSurface(
-                    this->surfaceSourceInfo[surfaceIdx].Width, this->surfaceSourceInfo[surfaceIdx].Height,
-                    g_Supervisor.presentParameters.BackBufferFormat, &this->surfaces[surfaceIdx]) != D3D_OK)
-            {
-                D3D_Surface->Release();
-                return;
-            }
-        }
-        if (zLoadSurfaceFromSurface(this->surfaces[surfaceIdx], NULL, this->surfacesBis[surfaceIdx], NULL,
-                                    D3DX_FILTER_NONE) != D3D_OK)
-        {
-            D3D_Surface->Release();
-            return;
-        }
-    }
-
     RECT rect;
     POINT point;
     rect.left = rectLeft;
@@ -1640,7 +1406,7 @@ void AnmManager::DrawEndingRect(i32 surfaceIdx, i32 rectX, i32 rectY, i32 rectLe
     rect.bottom = rectTop + height;
     point.x = rectX;
     point.y = rectY;
-    g_Supervisor.d3dDevice->CopyRects(this->surfaces[surfaceIdx], &rect, 1, D3D_Surface, &point);
+    g_Supervisor.d3dDevice->CopyRects(bgSurface, &rect, 1, D3D_Surface, &point);
     D3D_Surface->Release();
 }
 
@@ -1669,7 +1435,7 @@ void AnmManager::TakeScreenshot(i32 textureId, i32 left, i32 top, i32 width, i32
     rect.top = top;
     rect.right = left + width;
     rect.bottom = top + height;
-    if (zLoadSurfaceFromSurface(destSurface, NULL, sourceSurface, &rect, D3DX_DEFAULT) != D3D_OK)
+    if (zLoadSurfaceFromSurface(destSurface, NULL, sourceSurface, &rect, 0) != D3D_OK)
     {
         destSurface->Release();
         sourceSurface->Release();

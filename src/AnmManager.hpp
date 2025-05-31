@@ -1,7 +1,6 @@
 #pragma once
 
 #include <d3d8.h>
-#include <d3dx8tex.h>
 #include "math/math.hpp"
 
 #include "AnmIdx.hpp"
@@ -96,9 +95,7 @@ struct AnmManager
     void ReleaseVertexBuffer();
     void SetupVertexBuffer();
 
-    ZunResult CreateEmptyTexture(i32 textureIdx, u32 width, u32 height, i32 textureFormat);
-    ZunResult LoadTexture(i32 textureIdx, char *textureName, i32 textureFormat, ZunColor colorKey);
-    ZunResult LoadTextureAlphaChannel(i32 textureIdx, char *textureName, i32 textureFormat, ZunColor colorKey);
+    ZunResult LoadAnmTex(AnmRawEntry* anm);
     void ReleaseTexture(i32 textureIdx);
     void TakeScreenshotIfRequested();
     void TakeScreenshot(i32 textureId, i32 left, i32 top, i32 width, i32 height);
@@ -157,9 +154,9 @@ struct AnmManager
     void LoadSprite(u32 spriteIdx, AnmLoadedSprite *sprite);
     ZunResult SetActiveSprite(AnmVm *vm, u32 spriteIdx);
 
-    void ReleaseSurfaces(void);
-    ZunResult LoadSurface(i32 surfaceIdx, char *path);
-    void ReleaseSurface(i32 surfaceIdx);
+    ZunResult LoadBackground(char *path);
+    void ReleaseBgSurface();
+
     void CopySurfaceToBackBuffer(i32 surfaceIdx, i32 left, i32 top, i32 x, i32 y);
     void DrawEndingRect(i32 surfaceIdx, i32 rectX, i32 rectY, i32 rectLeft, i32 rectTop, i32 width, i32 height);
 
@@ -199,9 +196,9 @@ struct AnmManager
     i32 spriteIndices[2048];
     AnmRawEntry *anmFiles[128];
     u32 anmFilesSpriteIndexOffsets[128];
-    IDirect3DSurface8 *surfaces[32];
-    IDirect3DSurface8 *surfacesBis[32];
-    zIMAGE_INFO surfaceSourceInfo[32];
+    IDirect3DTexture8 *background;
+    IDirect3DSurface8 *bgSurface;
+    zIMAGE_INFO bgImgInfo;
     ZunColor currentTextureFactor;
     IDirect3DTexture8 *currentTexture;
     u8 currentBlendMode;

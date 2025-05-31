@@ -11,7 +11,6 @@
 // classic math utils
 #include "math_util.hpp"
 
-// D3DX
 #include "math_functions.hpp"
 #include "quat.hpp"
 #include "vec2.hpp"

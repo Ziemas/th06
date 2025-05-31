@@ -320,7 +320,7 @@ ZunResult Supervisor::AddedCallback(Supervisor *s)
     {
         return ZUN_ERROR;
     }
-    g_AnmManager->LoadSurface(0, "data/title/th06logo.jpg");
+    g_AnmManager->LoadBackground("data/title/th06logo.jpg");
     g_AnmManager->CopySurfaceToBackBuffer(0, 0, 0, 0, 0);
     if (g_Supervisor.d3dDevice->Present(0, 0, 0, 0) < 0)
         g_Supervisor.d3dDevice->Reset(&g_Supervisor.presentParameters);
@@ -329,7 +329,7 @@ ZunResult Supervisor::AddedCallback(Supervisor *s)
     if (g_Supervisor.d3dDevice->Present(0, 0, 0, 0) < 0)
         g_Supervisor.d3dDevice->Reset(&g_Supervisor.presentParameters);
 
-    g_AnmManager->ReleaseSurface(0);
+    g_AnmManager->ReleaseBgSurface();
 
     s->startupTimeBeforeMenuMusic = timeGetTime();
     Supervisor::SetupDInput(s);
